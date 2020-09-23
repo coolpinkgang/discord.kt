@@ -5,4 +5,7 @@ import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Role(override val id: Snowflake) : SnowflakeMixin()
+data class Role(
+    override val id: Snowflake,
+    val name: String,
+) : SnowflakeMixin()
