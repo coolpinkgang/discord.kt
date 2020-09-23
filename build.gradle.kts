@@ -10,7 +10,7 @@ val ktorVersion = "1.4.0"
 val kotlinxCoroutinesVersion = "1.3.9"
 
 repositories {
-
+    jcenter()
 }
 
 dependencies {
