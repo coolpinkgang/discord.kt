@@ -1,11 +1,17 @@
 package io.github.romangraef.discordkt.models
 
 import io.github.romangraef.discordkt.models.serial.FlagsSerializer
+import io.github.romangraef.discordkt.models.serial.OrdinalSerializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class User(
@@ -51,7 +57,11 @@ data class User(
         VERIFIED_BOT,
         VERIFIED_BOT_DEVELOPER;
     }
-    enum class PremiumType {
-        NONE, NITRO_CLASSIC, NITRO
+
+    @Serializable(with = PremiumType.Serializer::class)
+    enum class PremiumType(val id: Int) {
+        NONE(0), NITRO_CLASSIC(1), NITRO(2);
+
+        class Serializer : OrdinalSerializer<PremiumType>(values())
     }
 }

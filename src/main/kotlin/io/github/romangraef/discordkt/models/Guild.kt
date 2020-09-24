@@ -1,6 +1,8 @@
 package io.github.romangraef.discordkt.models
 
-import io.github.romangraef.discordkt.models.serial.*
+import io.github.romangraef.discordkt.models.serial.NameEnumSerializer
+import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
