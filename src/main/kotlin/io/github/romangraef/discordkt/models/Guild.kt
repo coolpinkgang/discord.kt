@@ -1,8 +1,6 @@
 package io.github.romangraef.discordkt.models
 
-import io.github.romangraef.discordkt.models.serial.NameEnumSerializer
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+import io.github.romangraef.discordkt.models.serial.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -36,16 +34,16 @@ data class Guild(
     @SerialName("embed_channel_id")
     val embedChannelId: Snowflake? = null,
     @SerialName("verification_level")
-    val verificationLevel: Int,
+    val verificationLevel: VerificationLevel,
     @SerialName("default_message_notifications")
-    val defaultMessageNotifications: Int,
+    val defaultMessageNotifications: DefaultMessageNotificationsLevel,
     @SerialName("explicit_content_filter")
-    val explicitContentFilter: Int,
+    val explicitContentFilter: ExplicitContentFilterLevel,
     val roles: List<Role>,
     val emojis: List<Emoji>,
     val features: List<Feature>,
     @SerialName("mfa_level")
-    val mfaLevel: Int,
+    val mfaLevel: MfaLevel,
     @SerialName("application_id")
     val applicationId: Snowflake?,
     @SerialName("widget_enabled")
@@ -54,7 +52,44 @@ data class Guild(
     val widgetChannelId: Snowflake? = null,
     @SerialName("system_channel_id")
     val systemChannelId: Snowflake? = null,
-) : SnowflakeMixin() {
+    @SerialName("system_channel_flag")
+    val systemChannelFlags: SystemChannelFlags,
+    @SerialName("rules_channel_id")
+    val rulesChannelId: Snowflake?,
+    @SerialName("joined_at")
+    val joinedAt: String = "", //TODO: ISO8601 timestamp
+    val large: Boolean = false,
+    val unavailable: Boolean = false,
+    @SerialName("member_count")
+    val memberCount: Int = 0,
+    @SerialName("voice_states")
+    val voiceStates: List<VoiceState> = emptyList(),
+    val members: List<Member> = emptyList(),
+    val channels: List<Channel> = emptyList(),
+    val presences: List<PresenceUpdate> = emptyList(),
+    @SerialName("max_presences")
+    val maxPresences: Int = 0,
+    @SerialName("max_members")
+    val maxMembers: Int = 0,
+    @SerialName("vanity_url_code")
+    val vanityUrlCode: String?,
+    val description: String?,
+    val banner: String?,
+    @SerialName("premium_tier")
+    val premiumTier: PremiumTier,
+    @SerialName("premium_subscription_count")
+    val premiumSubscriptionCount: Int = 0,
+    @SerialName("preferred_locale")
+    val preferredLocale: String,
+    @SerialName("public_update_channel_id")
+    val publicUpdateChannelId: Snowflake?,
+    @SerialName("max_video_channel_users")
+    val maxVideoChannelUsers: Int = 0,
+    @SerialName("approximate_member_count")
+    val approximateMemberCount: Int = 0,
+    @SerialName("approximate_presence_count")
+    val approximatePresenceCount: Int = 0
+    ) : SnowflakeMixin() {
     @Serializable(with = Feature.Serializer::class)
     enum class Feature {
         INVITE_SPLASH,
@@ -72,5 +107,39 @@ data class Guild(
         PUBLIC_DISABLED,
         WELCOME_SCREEN_ENABLED;
         class Serializer : NameEnumSerializer<Feature>("Feature", Feature::valueOf)
+    }
+    @Serializable(with = SystemChannelFlags.Serializer::class)
+    interface SystemChannelFlags : List<SystemChannelFlag> {
+        class Serializer : FlagsSerializer<SystemChannelFlag>(SystemChannelFlag::values)
+    }
+    enum class SystemChannelFlag {
+        SUPPRESS_JOIN_NOTIFICATIONS,
+        SUPPRESS_PREMIUM_SUBSCRIPTIONS
+    }
+    enum class PremiumTier {
+        NONE,
+        TIER_1,
+        TIER_2,
+        TIER_3
+    }
+    enum class VerificationLevel {
+        NONE,
+        LOW,
+        MEDIUM,
+        HIGH,
+        VERY_HIGH
+    }
+    enum class MfaLevel {
+        NONE,
+        ELEVATED
+    }
+    enum class ExplicitContentFilterLevel {
+        DISABLED,
+        MEMBERS_WITHOUT_ROLES,
+        ALL_MEMBERS
+    }
+    enum class DefaultMessageNotificationsLevel {
+        ALL_MESSAGES,
+        ONLY_MENTIONS
     }
 }

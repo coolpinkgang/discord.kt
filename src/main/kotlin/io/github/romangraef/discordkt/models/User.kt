@@ -1,17 +1,11 @@
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.serial.FlagsSerializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
-import kotlinx.serialization.KSerializer
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import java.util.*
-import kotlin.collections.ArrayList
 
 @Serializable
 data class User(
@@ -36,35 +30,26 @@ data class User(
 ) : SnowflakeMixin() {
     @Serializable(with = Flags.Serializer::class)
     interface Flags : List<Flag> {
-        class Serializer : KSerializer<Flags> {
-            override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Flags", PrimitiveKind.INT)
-            override fun deserialize(decoder: Decoder): Flags {
-                val int = decoder.decodeInt()
-                if (int != 0) return emptyList<Flag>() as Flags
-                return Flag.values().filter { it.checkInt(int) } as Flags
-            }
-            override fun serialize(encoder: Encoder, value: Flags) {
-                var int = 0
-                value.forEach { int = int shl it.id or 1 }
-                encoder.encodeInt(int)
-            }
-        }
+        class Serializer : FlagsSerializer<Flag>(Flag::values)
     }
-    enum class Flag(val id: Int) {
-        DISCORD_EMPLOYEE(0),
-        DISCORD_PARTNER(1),
-        HYPESQUAD_EVENTS(2),
-        BUG_HUNTER_LEVEL_1(3),
-        HOUSE_BRAVERY(6),
-        HOUSE_BRILLIANCE(7),
-        HOUSE_BALANCE(8),
-        EARLY_SUPPORTER(9),
-        TEAM_USER(10),
-        SYSTEM(12),
-        BUG_HUNTER_LEVEL_2(14),
-        VERIFIED_BOT(16),
-        VERIFIED_BOT_DEVELOPER(17);
-        fun checkInt(int: Int) = int shl id and 1 == 1
+    enum class Flag {
+        DISCORD_EMPLOYEE,
+        DISCORD_PARTNER,
+        HYPESQUAD_EVENTS,
+        BUG_HUNTER_LEVEL_1,
+        NULL_4,
+        NULL_5,
+        HOUSE_BRAVERY,
+        HOUSE_BRILLIANCE,
+        HOUSE_BALANCE,
+        EARLY_SUPPORTER,
+        TEAM_USER,
+        SYSTEM,
+        NULL_13,
+        BUG_HUNTER_LEVEL_2,
+        NULL_15,
+        VERIFIED_BOT,
+        VERIFIED_BOT_DEVELOPER;
     }
     enum class PremiumType {
         NONE, NITRO_CLASSIC, NITRO

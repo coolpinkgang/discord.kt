@@ -23,10 +23,10 @@ data class AuditLog(
     @Serializable
     data class Entry (
         @SerialName("target_id")
-        val targetID: String?,
+        val targetId: String?,
         //TODO: val changes: List<Change<out Nothing>> = listOf(),
         @SerialName("user_id")
-        val userID: Snowflake,
+        val userId: Snowflake,
         override val id: Snowflake,
         @SerialName("action_type")
         val actionType: Event,
@@ -91,9 +91,9 @@ data class AuditLog(
             @SerialName("members_removed")
             val membersRemoved: String,
             @SerialName("channel_id")
-            val channelID: Snowflake,
+            val channelId: Snowflake,
             @SerialName("message_id")
-            val messageID: Snowflake,
+            val messageId: Snowflake,
             val count: String,
             override val id: Snowflake,
             val type: String
