@@ -7,3 +7,4 @@ indent_size = 4
 insert_final_newline = true
 charset = utf-8
 end_of_line = lf
+ij_kotlin_parameter_annotation_wrap = split_into_lines
