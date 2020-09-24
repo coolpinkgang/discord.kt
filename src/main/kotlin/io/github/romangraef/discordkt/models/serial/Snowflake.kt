@@ -8,23 +8,17 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = ForSnowflake::class)
+@Serializable(with = Snowflake.Serializer::class)
 data class Snowflake(
     override val stringId: String
 ) : BaseSnowflake {
     override val longId = stringId.toLong()
     override val asSnowflake: Snowflake
         get() = this
-}
-
-class ForSnowflake : KSerializer<Snowflake> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Snowflake", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): Snowflake =
-        Snowflake(decoder.decodeString())
-
-    override fun serialize(encoder: Encoder, value: Snowflake) {
-        encoder.encodeString(value.stringId)
+    class Serializer : KSerializer<Snowflake> {
+        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Snowflake", PrimitiveKind.STRING)
+        override fun deserialize(decoder: Decoder): Snowflake = Snowflake(decoder.decodeString())
+        override fun serialize(encoder: Encoder, value: Snowflake) = encoder.encodeString(value.stringId)
     }
 }
 

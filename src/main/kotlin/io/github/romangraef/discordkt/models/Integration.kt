@@ -12,13 +12,18 @@ data class Integration(
     val type: String,
     val enabled: Boolean,
     val syncing: Boolean,
-    @SerialName("role_id") val stringRoleId: String,
-    @SerialName("enable_emoticons") val enableEmoticons: Boolean = false,
-    @SerialName("expire_behavior") val intExpireBehavior: Int,
-    @SerialName("expire_grace_period") val expireGracePeriod: Int,
+    @SerialName("role_id")
+    val roleId: Snowflake,
+    @SerialName("enable_emoticons")
+    val enableEmoticons: Boolean = false,
+    @SerialName("expire_behavior")
+    val expireBehavior: ExpireBehavior,
+    @SerialName("expire_grace_period")
+    val expireGracePeriod: Int,
     val user: User,
     val account: Account,
-    @SerialName("synced_at") val stringSyncedAt: String
+    @SerialName("synced_at")
+    val stringSyncedAt: String //TODO: ISO8601 timestamp!
 ) : SnowflakeMixin() {
     enum class ExpireBehavior {
         REMOVE_ROLE, KICK

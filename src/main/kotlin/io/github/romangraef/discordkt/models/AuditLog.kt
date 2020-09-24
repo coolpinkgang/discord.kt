@@ -1,7 +1,15 @@
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class AuditLog(
@@ -18,20 +26,22 @@ data class AuditLog(
         val targetID: String?,
         //TODO: val changes: List<Change<out Nothing>> = listOf(),
         @SerialName("user_id")
-        val stringUserID: String,
-        @SerialName("id")
-        val stringID: String,
+        val userID: Snowflake,
+        override val id: Snowflake,
         @SerialName("action_type")
-        val intActionType: Int,
+        val actionType: Event,
         val options: OptionalInfo? = null,
         val reason: String? = null,
-    )
+    ) : SnowflakeMixin()
     @Serializable
     data class Change<T>(
-            @SerialName("new_value") val newValue: T,
-            @SerialName("old_value") val oldValue: T,
+            @SerialName("new_value")
+            val newValue: T,
+            @SerialName("old_value")
+            val oldValue: T,
             val key: String,
     )
+    @Serializable(with = Event.Serializer::class)
     enum class Event(val id: Int) {
         GUILD_UPDATE(1),
         CHANNEL_CREATE(10),
@@ -67,16 +77,25 @@ data class AuditLog(
         MESSAGE_UNPIN(75),
         INTEGRATION_CREATE(80),
         INTEGRATION_UPDATE(81),
-        INTEGRATION_DELETE(82)
+        INTEGRATION_DELETE(82);
+        class Serializer : KSerializer<Event> {
+            override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Event", PrimitiveKind.INT)
+            override fun deserialize(decoder: Decoder): Event = values().find { it.id == decoder.decodeInt() }!!
+            override fun serialize(encoder: Encoder, value: Event) = encoder.encodeInt(value.id)
+        }
     }
     @Serializable
     data class OptionalInfo(
-            @SerialName("delete_member_days") val deleteMemberDays: String,
-            @SerialName("members_removed") val membersRemoved: String,
-            @SerialName("channel_id") val stringChannelID: String,
-            @SerialName("message_id") val stringMessageID: String,
+            @SerialName("delete_member_days")
+            val deleteMemberDays: String,
+            @SerialName("members_removed")
+            val membersRemoved: String,
+            @SerialName("channel_id")
+            val channelID: Snowflake,
+            @SerialName("message_id")
+            val messageID: Snowflake,
             val count: String,
-            @SerialName("id") val stringID: String,
+            override val id: Snowflake,
             val type: String
-    )
+    ) : SnowflakeMixin()
 }

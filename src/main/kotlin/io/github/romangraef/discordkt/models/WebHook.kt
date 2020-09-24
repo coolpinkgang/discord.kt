@@ -8,9 +8,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WebHook(
     override val id: Snowflake,
-    @SerialName("type") val intType: Int,
-    @SerialName("guild_id") val stringGuildID: String? = null,
-    @SerialName("channel_id") val stringChannelID: String,
+    @SerialName("type")
+    val type: Type,
+    @SerialName("guild_id")
+    val guildID: Snowflake? = null,
+    @SerialName("channel_id")
+    val channelID: Snowflake,
     val user: User? = null,
     val name: String?,
     val avatar: String?,
