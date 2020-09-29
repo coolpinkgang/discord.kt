@@ -1,9 +1,13 @@
+@file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import java.time.OffsetDateTime
 
 @Serializable
 data class Integration(
@@ -23,7 +27,7 @@ data class Integration(
     val user: User,
     val account: Account,
     @SerialName("synced_at")
-    val stringSyncedAt: String //TODO: ISO8601 timestamp!
+    val stringSyncedAt: OffsetDateTime
 ) : SnowflakeMixin() {
     enum class ExpireBehavior {
         REMOVE_ROLE, KICK

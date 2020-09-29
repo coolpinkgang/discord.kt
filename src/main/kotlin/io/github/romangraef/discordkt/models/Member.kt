@@ -1,9 +1,13 @@
+@file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import kotlinx.serialization.SerialName
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import java.time.OffsetDateTime
 
 @Serializable
 data class Member(
@@ -11,9 +15,9 @@ data class Member(
     val nick: String?,
     val roles: List<Snowflake>,
     @SerialName("joined_at")
-    val joinedAt: String, //TODO: ISO8601 timestamp
+    val joinedAt: OffsetDateTime,
     @SerialName("premium_since")
-    val premiumSince: String? = null, //TODO: ISO8601 timestamp
+    val premiumSince: OffsetDateTime = OffsetDateTime.MIN,
     val deaf: Boolean,
     val mute: Boolean
 )

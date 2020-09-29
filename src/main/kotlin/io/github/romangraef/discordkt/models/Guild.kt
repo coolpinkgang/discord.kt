@@ -1,17 +1,17 @@
+@file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models
 
-import io.github.romangraef.discordkt.models.serial.FlagsSerializer
-import io.github.romangraef.discordkt.models.serial.NameEnumSerializer
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+import io.github.romangraef.discordkt.models.serial.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import java.time.OffsetDateTime
 
 @Serializable
 data class Guild(
@@ -63,7 +63,7 @@ data class Guild(
     @SerialName("rules_channel_id")
     val rulesChannelId: Snowflake?,
     @SerialName("joined_at")
-    val joinedAt: String = "", //TODO: ISO8601 timestamp
+    val joinedAt: OffsetDateTime = OffsetDateTime.MIN,
     val large: Boolean = false,
     val unavailable: Boolean = false,
     @SerialName("member_count")

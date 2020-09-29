@@ -34,7 +34,7 @@ data class Channel(
     val ownerId: Snowflake,
     val applicationId: Snowflake,
     val parentId: Snowflake,
-    val lastPinTimestamp: OffsetDateTime, //TODO: ISO8601 timestamp
+    val lastPinTimestamp: OffsetDateTime,
 ) : SnowflakeMixin() {
     enum class Type {
         GUILD_TEXT,
