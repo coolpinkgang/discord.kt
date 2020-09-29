@@ -29,7 +29,7 @@ data class User(
     val email: String? = null,
     @SerialName("flags")
     val flags: Flags = Flags(emptyList()),
-    @SerialName("permium_type")
+    @SerialName("premium_type")
     val premiumType: PremiumType = PremiumType.NONE,
     @SerialName("public_flags")
     val publicFlags: Flags = Flags(emptyList())
@@ -58,6 +58,7 @@ data class User(
         VERIFIED_BOT_DEVELOPER;
     }
 
+    @Serializable(with=PremiumType.Serializer::class)
     enum class PremiumType {
         NONE, NITRO_CLASSIC, NITRO;
         class Serializer : OrdinalSerializer<PremiumType>(values())

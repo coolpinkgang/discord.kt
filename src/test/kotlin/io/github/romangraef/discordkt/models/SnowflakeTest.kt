@@ -11,7 +11,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 
-object SnowflakeTest : StringSpec({
+class SnowflakeTest : StringSpec({
     "Snowflake Serialization" {
         val json = Json {}
         val longValue = Random.nextLong()

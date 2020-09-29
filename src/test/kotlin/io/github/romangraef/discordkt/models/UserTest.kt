@@ -7,7 +7,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-object UserTest : StringSpec({
+class UserTest : StringSpec({
     "User Serialization" {
         val json = Json {
             ignoreUnknownKeys = true
