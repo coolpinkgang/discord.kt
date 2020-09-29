@@ -1,12 +1,12 @@
 package io.github.romangraef.discordkt.models
 
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 
-object RoleTest : Spek({
-    describe("Role") {
+class RoleTest : StringSpec({
+    "Role" {
         val json = Json {
             ignoreUnknownKeys = true
         }
@@ -22,10 +22,8 @@ object RoleTest : Spek({
   "managed": false,
   "mentionable": false
 }"""
-        it("deserializes correctly") {
             val role = json.decodeFromString<Role>(roleJsonString)
-            assert(role.longId == 41771983423143936L) { "Invalid id" }
-            assert(role.name == "WE DEM BOYZZ!!!!!!") { "Invalid name" }
-        }
+            role.longId shouldBe 41771983423143936L
+            role.name shouldBe "WE DEM BOYZZ!!!!!!"
     }
 })

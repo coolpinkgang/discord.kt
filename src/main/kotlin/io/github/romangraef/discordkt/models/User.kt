@@ -58,7 +58,6 @@ data class User(
         VERIFIED_BOT_DEVELOPER;
     }
 
-    @Serializable(with = PremiumType.Serializer::class)
     enum class PremiumType {
         NONE, NITRO_CLASSIC, NITRO;
         class Serializer : OrdinalSerializer<PremiumType>(values())
