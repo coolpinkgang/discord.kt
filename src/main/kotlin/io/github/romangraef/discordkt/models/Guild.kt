@@ -24,7 +24,10 @@ data class Guild(
     val owner: Boolean = false,
     @SerialName("owner_id")
     val ownerId: Snowflake,
+    @Deprecated("deprecated", ReplaceWith("permissionsNew"))
     val permissions: Int = 0,
+    @SerialName("permissions_new")
+    val permissionsNew: Permissions = Permissions(emptyList()),
     val region: String,
     @SerialName("afk_channel_id")
     val afkChannelId: Snowflake?,
@@ -54,7 +57,7 @@ data class Guild(
     @SerialName("widget_channel_id")
     val widgetChannelId: Snowflake? = null,
     @SerialName("system_channel_id")
-    val systemChannelId: Snowflake? = null,
+    val systemChannelId: Snowflake?,
     @SerialName("system_channel_flag")
     val systemChannelFlags: SystemChannelFlags,
     @SerialName("rules_channel_id")
@@ -71,7 +74,7 @@ data class Guild(
     val channels: List<Channel> = emptyList(),
     val presences: List<PresenceUpdate> = emptyList(),
     @SerialName("max_presences")
-    val maxPresences: Int = 0,
+    val maxPresences: Int? = null,
     @SerialName("max_members")
     val maxMembers: Int = 0,
     @SerialName("vanity_url_code")
