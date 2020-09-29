@@ -1,10 +1,14 @@
+@file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+import java.time.OffsetDateTime
 import kotlinx.serialization.SerialName
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class Channel(
@@ -30,7 +34,7 @@ data class Channel(
     val ownerId: Snowflake,
     val applicationId: Snowflake,
     val parentId: Snowflake,
-    val lastPinTimestamp: String //TODO: ISO8601 timestamp
+    val lastPinTimestamp: OffsetDateTime, //TODO: ISO8601 timestamp
 ) : SnowflakeMixin() {
     enum class Type {
         GUILD_TEXT,
