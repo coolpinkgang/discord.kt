@@ -11,12 +11,12 @@ abstract class FlagsSerializer<E : Enum<E>, T:List<E>>(val values: () -> Array<E
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Flag", PrimitiveKind.INT)
     override fun deserialize(decoder: Decoder): T {
         val int = decoder.decodeInt()
-        if (int != 0) return con(emptyList())
-        return con(values().filter { int shl it.ordinal and 1 == 1 })
+        if (int == 0) return con(emptyList())
+        return con(values().filter { (1 shl it.ordinal) and int != 0 })
     }
     override fun serialize(encoder: Encoder, value: T) {
         var int = 0
-        value.forEach { int = int shl it.ordinal or 1 }
+        value.forEach { int = 1 shl it.ordinal or int }
         encoder.encodeInt(int)
     }
 }

@@ -11,7 +11,7 @@ object UserTest : Spek({
             ignoreUnknownKeys = true
         }
         val userJson = """{"id":"80351110224678912","username":"Nelly","discriminator":"1337","avatar":"8342729096ea3675442027381ff50dfe","verified":true,"email":"nelly@discord.com","flags":64,"premium_type":1,"public_flags":64}"""
-        describe("deserializes correctly") {
+        it("deserializes correctly") {
             val user = json.decodeFromString<User>(userJson)
             assert(user.longId == 80351110224678912L)
             assert(user.username == "Nelly")
