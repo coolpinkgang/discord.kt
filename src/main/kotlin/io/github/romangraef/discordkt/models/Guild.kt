@@ -112,8 +112,8 @@ data class Guild(
         class Serializer : NameEnumSerializer<Feature>("Feature", Feature::valueOf)
     }
     @Serializable(with = SystemChannelFlags.Serializer::class)
-    interface SystemChannelFlags : List<SystemChannelFlag> {
-        class Serializer : FlagsSerializer<SystemChannelFlag>(SystemChannelFlag::values)
+    class SystemChannelFlags(val backingList: List<SystemChannelFlag>) : List<SystemChannelFlag> by backingList{
+        class Serializer : FlagsSerializer<SystemChannelFlag, SystemChannelFlags>(SystemChannelFlag::values, ::SystemChannelFlags)
     }
     enum class SystemChannelFlag {
         SUPPRESS_JOIN_NOTIFICATIONS,

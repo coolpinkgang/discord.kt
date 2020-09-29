@@ -22,7 +22,7 @@ data class Activity(
     val assets: Assets = Assets(),
     val secrets: Secrets = Secrets(),
     val instance: Boolean? = null,
-    val flags: Flags = emptyList<Flag>() as Flags
+    val flags: Flags = Flags(emptyList())
 ) {
     enum class Type {
         GAME,
@@ -58,8 +58,8 @@ data class Activity(
         val match: String? = null
     )
     @Serializable(with = Flags.Serializer::class)
-    interface Flags : List<Flag> {
-        class Serializer : FlagsSerializer<Flag>(Flag::values)
+    class Flags(val backingList: List<Flag>) : List<Flag> by backingList {
+        class Serializer : FlagsSerializer<Flag, Flags>(Flag::values, ::Flags)
     }
     enum class Flag {
         INSTANCE,

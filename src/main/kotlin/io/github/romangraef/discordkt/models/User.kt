@@ -28,15 +28,15 @@ data class User(
     val verified: Boolean? = null,
     val email: String? = null,
     @SerialName("flags")
-    val flags: Flags = emptyList<Flag>() as Flags,
+    val flags: Flags = Flags(emptyList()),
     @SerialName("permium_type")
     val premiumType: PremiumType = PremiumType.NONE,
     @SerialName("public_flags")
-    val publicFlags: Flags = emptyList<Flag>() as Flags
+    val publicFlags: Flags = Flags(emptyList())
 ) : SnowflakeMixin() {
     @Serializable(with = Flags.Serializer::class)
-    interface Flags : List<Flag> {
-        class Serializer : FlagsSerializer<Flag>(Flag::values)
+    class Flags(val backingList: List<Flag>) : List<Flag> by backingList {
+        class Serializer : FlagsSerializer<Flag, Flags>(Flag::values, ::Flags)
     }
     enum class Flag {
         DISCORD_EMPLOYEE,
