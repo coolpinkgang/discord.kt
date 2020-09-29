@@ -59,9 +59,8 @@ data class User(
     }
 
     @Serializable(with = PremiumType.Serializer::class)
-    enum class PremiumType(val id: Int) {
-        NONE(0), NITRO_CLASSIC(1), NITRO(2);
-
+    enum class PremiumType {
+        NONE, NITRO_CLASSIC, NITRO;
         class Serializer : OrdinalSerializer<PremiumType>(values())
     }
 }

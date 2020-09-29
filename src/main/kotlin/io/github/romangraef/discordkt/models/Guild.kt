@@ -1,5 +1,6 @@
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.serial.FlagsSerializer
 import io.github.romangraef.discordkt.models.serial.NameEnumSerializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin

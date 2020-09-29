@@ -14,7 +14,23 @@ data class Channel(
     val guildId: Snowflake,
     val position: Int,
     @SerialName("permission_overwrites")
-    val permissionOverwrites: List<PermissionOverwriteReceiving>
+    val permissionOverwrites: List<PermissionOverwriteReceiving>,
+    val name: String,
+    val topic: String?,
+    val nsfw: Boolean,
+    @SerialName("last_message_id")
+    val lastMessageId: Snowflake?,
+    val bitrate: Int,
+    @SerialName("user_limit")
+    val userLimit: Int,
+    @SerialName("rate_limit_per_user")
+    val rateLimitPerUser: Int,
+    val recipients: List<User>,
+    val icon: String?,
+    val ownerId: Snowflake,
+    val applicationId: Snowflake,
+    val parentId: Snowflake,
+    val lastPinTimestamp: String //TODO: ISO8601 timestamp
 ) : SnowflakeMixin() {
     enum class Type {
         GUILD_TEXT,
