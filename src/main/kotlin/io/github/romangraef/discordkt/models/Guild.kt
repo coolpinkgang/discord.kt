@@ -1,6 +1,7 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.emoji.Emoji
 import io.github.romangraef.discordkt.models.serial.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
