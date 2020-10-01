@@ -3,7 +3,6 @@
 package io.github.romangraef.discordkt.http.routes
 
 
-import io.github.romangraef.discordkt.models.Channel
 import io.ktor.http.HttpMethod
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer

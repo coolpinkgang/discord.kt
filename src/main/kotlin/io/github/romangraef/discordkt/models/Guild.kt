@@ -1,6 +1,7 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.channel.Channel
 import io.github.romangraef.discordkt.models.emoji.Emoji
 import io.github.romangraef.discordkt.models.serial.*
 import kotlinx.serialization.KSerializer
@@ -113,7 +114,7 @@ data class Guild(
         BANNER,
         PUBLIC_DISABLED,
         WELCOME_SCREEN_ENABLED;
-        class Serializer : NameEnumSerializer<Feature>("Feature", Feature::valueOf)
+        class Serializer : EnumNameSerializer<Feature>(Feature::valueOf)
     }
     @Serializable(with = SystemChannelFlags.Serializer::class)
     class SystemChannelFlags(val backingList: List<SystemChannelFlag>) : List<SystemChannelFlag> by backingList{

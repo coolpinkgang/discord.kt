@@ -1,7 +1,6 @@
-
 package io.github.romangraef.discordkt.http.routes
 
-import io.github.romangraef.discordkt.models.Channel
+import io.github.romangraef.discordkt.models.channel.Channel
 
 object Channels {
 
