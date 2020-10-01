@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class WebHook(
+data class Webhook(
     override val id: Snowflake,
     @SerialName("type")
     val type: Type,
