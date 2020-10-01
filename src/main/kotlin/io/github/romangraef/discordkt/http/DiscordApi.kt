@@ -4,13 +4,15 @@ import io.github.romangraef.discordkt.http.routes.RouteWithBody
 import io.github.romangraef.discordkt.http.routes.RouteWithoutBody
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.readText
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
 
-suspend fun HttpClient.execute(method: HttpMethod, url: String, body: String): String = this.request(url) {
+suspend fun HttpClient.execute(method: HttpMethod, url: String, body: String): String = this.request<HttpResponse>(url) {
     this.method = method
     this.body = body
-}
+}.readText()
 
 suspend fun <RESULT> HttpClient.execute(json: Json, route: RouteWithoutBody<RESULT>) =
     json.decodeFromString(route.resultDeserializer, execute(route.method, route.url, ""))

@@ -25,7 +25,7 @@ data class Integration(
     @SerialName("expire_grace_period")
     val expireGracePeriod: Int,
     val user: User,
-    val account: Account,
+    val account: IntegrationAccount,
     @SerialName("synced_at")
     val stringSyncedAt: OffsetDateTime
 ) : SnowflakeMixin() {

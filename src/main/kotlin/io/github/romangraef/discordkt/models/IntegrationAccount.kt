@@ -5,7 +5,7 @@ import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Account(
+data class IntegrationAccount(
     override val id: Snowflake,
     val name: String
 ) : SnowflakeMixin()
