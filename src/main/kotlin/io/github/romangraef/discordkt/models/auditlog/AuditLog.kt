@@ -2,7 +2,7 @@ package io.github.romangraef.discordkt.models.auditlog
 
 import io.github.romangraef.discordkt.models.guild.Integration
 import io.github.romangraef.discordkt.models.user.User
-import io.github.romangraef.discordkt.models.Webhook
+import io.github.romangraef.discordkt.models.webhook.Webhook
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

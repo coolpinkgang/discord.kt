@@ -1,4 +1,4 @@
-package io.github.romangraef.discordkt.models
+package io.github.romangraef.discordkt.models.webhook
 
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 data class Webhook(
         override val id: Snowflake,
         @SerialName("type")
-    val type: Type,
+    val type: WebhookType,
         @SerialName("guild_id")
     val guildId: Snowflake? = null,
         @SerialName("channel_id")
@@ -19,9 +19,4 @@ data class Webhook(
         val name: String?,
         val avatar: String?,
         val token: String? = null
-) : SnowflakeMixin() {
-    enum class Type {
-        INCOMING,
-        CHANNEL_FOLLOWER
-    }
-}
+) : SnowflakeMixin()
