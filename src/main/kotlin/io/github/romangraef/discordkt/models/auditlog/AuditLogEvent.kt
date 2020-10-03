@@ -1,5 +1,7 @@
 package io.github.romangraef.discordkt.models.auditlog
 
+import io.github.romangraef.discordkt.models.serial.IDBasedSerializer
+import io.github.romangraef.discordkt.models.serial.IDEnum
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -9,7 +11,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = AuditLogEvent.Serializer::class)
-enum class AuditLogEvent(val id: Int) {
+enum class AuditLogEvent(override val id: Int) : IDEnum {
     GUILD_UPDATE(1),
     CHANNEL_CREATE(10),
     CHANNEL_UPDATE(11),
@@ -45,9 +47,5 @@ enum class AuditLogEvent(val id: Int) {
     INTEGRATION_CREATE(80),
     INTEGRATION_UPDATE(81),
     INTEGRATION_DELETE(82);
-    class Serializer : KSerializer<AuditLogEvent> {
-        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Event", PrimitiveKind.INT)
-        override fun deserialize(decoder: Decoder): AuditLogEvent = values().find { it.id == decoder.decodeInt() }!!
-        override fun serialize(encoder: Encoder, value: AuditLogEvent) = encoder.encodeInt(value.id)
-    }
+    class Serializer : IDBasedSerializer<AuditLogEvent>(values())
 }
