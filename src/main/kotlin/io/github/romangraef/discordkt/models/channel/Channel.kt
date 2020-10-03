@@ -35,6 +35,7 @@ data class Channel(
     val icon: String? = null,
     val ownerId: Snowflake? = null,
     val applicationId: Snowflake? = null,
+    @SerialName("parent_id")
     val parentId: Snowflake? = null,
     val lastPinTimestamp: OffsetDateTime? = null,
 ) : SnowflakeMixin()
