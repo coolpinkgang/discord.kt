@@ -1,13 +1,16 @@
 @file:UseSerializers(ISO8601Serializer::class)
-package io.github.romangraef.discordkt.models
+package io.github.romangraef.discordkt.models.guild
 
+import io.github.romangraef.discordkt.models.User
 import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+
+import java.time.OffsetDateTime
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import java.time.OffsetDateTime
 
 @Serializable
 data class Integration(
@@ -21,15 +24,11 @@ data class Integration(
     @SerialName("enable_emoticons")
     val enableEmoticons: Boolean = false,
     @SerialName("expire_behavior")
-    val expireBehavior: ExpireBehavior,
+    val expireBehavior: IntegrationExpireBehavior,
     @SerialName("expire_grace_period")
     val expireGracePeriod: Int,
     val user: User,
     val account: IntegrationAccount,
     @SerialName("synced_at")
     val stringSyncedAt: OffsetDateTime
-) : SnowflakeMixin() {
-    enum class ExpireBehavior {
-        REMOVE_ROLE, KICK
-    }
-}
+) : SnowflakeMixin()

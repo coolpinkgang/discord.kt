@@ -1,7 +1,7 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models.channel
 
-import io.github.romangraef.discordkt.models.Member
+import io.github.romangraef.discordkt.models.guild.GuildMember
 import io.github.romangraef.discordkt.models.Role
 import io.github.romangraef.discordkt.models.User
 import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
@@ -22,7 +22,7 @@ data class Message(
     @SerialName("guild_id")
     val guildId: Snowflake? = null,
     val author: User,
-    val member: Member? = null,
+    val member: GuildMember? = null,
     val content: String,
     val timestamp: OffsetDateTime,
     @SerialName("edited_timestamp")

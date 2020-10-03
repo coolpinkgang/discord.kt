@@ -8,23 +8,6 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-@Serializable(with = Permissions.Serializer::class)
-class Permissions(val backingList: List<Permission>) : List<Permission> by backingList {
-    class Serializer : KSerializer<Permissions> {
-        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Flag", PrimitiveKind.INT)
-        override fun deserialize(decoder: Decoder): Permissions {
-            val long = decoder.decodeString().toLong()
-            if (long != 0L) return Permissions(emptyList())
-            return Permissions(Permission.values().filter { long shl it.ordinal and 1L == 1L })
-        }
-        override fun serialize(encoder: Encoder, value: Permissions) {
-            var long = 0L
-            value.forEach { long = long shl it.ordinal or 1 }
-            encoder.encodeString(long.toString())
-        }
-    }
-}
-
 enum class Permission {
     CREATE_INSTANT_INVITE,
     KICK_MEMBERS,
@@ -57,4 +40,20 @@ enum class Permission {
     MANAGE_ROLE,
     MANAGE_WEBHOOKS,
     MANAGE_EMOJIS;
+    @Serializable(with = BitField.Serializer::class)
+    class BitField(val backingList: List<Permission>) : List<Permission> by backingList {
+        class Serializer : KSerializer<BitField> {
+            override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Flag", PrimitiveKind.INT)
+            override fun deserialize(decoder: Decoder): BitField {
+                val long = decoder.decodeString().toLong()
+                if (long != 0L) return BitField(emptyList())
+                return BitField(Permission.values().filter { long shl it.ordinal and 1L == 1L })
+            }
+            override fun serialize(encoder: Encoder, value: BitField) {
+                var long = 0L
+                value.forEach { long = long shl it.ordinal or 1 }
+                encoder.encodeString(long.toString())
+            }
+        }
+    }
 }

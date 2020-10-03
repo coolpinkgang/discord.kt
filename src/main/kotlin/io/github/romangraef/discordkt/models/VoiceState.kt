@@ -1,5 +1,6 @@
 package io.github.romangraef.discordkt.models
 
+import io.github.romangraef.discordkt.models.guild.GuildMember
 import io.github.romangraef.discordkt.models.serial.Snowflake
 
 import kotlinx.serialization.SerialName
@@ -13,7 +14,7 @@ data class VoiceState(
     val channelId: Snowflake,
     @SerialName("user_id")
     val userId: Snowflake,
-    val member: Member? = null,
+    val member: GuildMember? = null,
     @SerialName("session_id")
     val sessionId: Snowflake,
     val deaf: Boolean,
