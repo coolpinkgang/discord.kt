@@ -19,6 +19,10 @@ data class Snowflake(
     override val asSnowflake: Snowflake
         get() = this
 
+    override fun equals(other: Any?): Boolean = other != null && other == longId
+    override fun hashCode(): Int = longId.hashCode()
+    override fun toString(): String = stringId
+
     class Serializer : KSerializer<Snowflake> {
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Snowflake", PrimitiveKind.STRING)
         override fun deserialize(decoder: Decoder): Snowflake = Snowflake(decoder.decodeString())

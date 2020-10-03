@@ -27,6 +27,11 @@ class RouteWithBody<RESULT, BODY>(
 ) : Route<RESULT>(method, url, resultDeserializer)
 
 
+inline fun <reified OUTPUT, reified BODY> POST(url: String) =
+    RouteWithBody(HttpMethod.Post, url, serializer<OUTPUT>(), serializer<BODY>())
 inline fun <reified OUTPUT> GET(url: String) = RouteWithoutBody(HttpMethod.Get, url, serializer<OUTPUT>())
+inline fun <reified OUTPUT, reified BODY> PUT(url: String) =
+    RouteWithBody(HttpMethod.Put, url, serializer<OUTPUT>(), serializer<BODY>())
 inline fun <reified OUTPUT, reified BODY> PATCH(url: String) =
     RouteWithBody(HttpMethod.Patch, url, serializer<OUTPUT>(), serializer<BODY>())
+inline fun <reified OUTPUT> DELETE(url: String) = RouteWithoutBody(HttpMethod.Delete, url, serializer<OUTPUT>())
