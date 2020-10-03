@@ -13,13 +13,13 @@ import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class GuildMember(
-        val user: User? = null,
-        val nick: String?,
-        val roles: List<Snowflake>,
-        @SerialName("joined_at")
+    val user: User? = null,
+    val nick: String?,
+    val roles: List<Snowflake>,
+    @SerialName("joined_at")
     val joinedAt: OffsetDateTime,
-        @SerialName("premium_since")
+    @SerialName("premium_since")
     val premiumSince: OffsetDateTime? = null,
-        val deaf: Boolean,
-        val mute: Boolean
+    val deaf: Boolean,
+    val mute: Boolean
 )
