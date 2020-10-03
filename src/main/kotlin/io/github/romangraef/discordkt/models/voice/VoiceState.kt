@@ -1,4 +1,4 @@
-package io.github.romangraef.discordkt.models
+package io.github.romangraef.discordkt.models.voice
 
 import io.github.romangraef.discordkt.models.guild.GuildMember
 import io.github.romangraef.discordkt.models.serial.Snowflake
@@ -9,9 +9,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VoiceState(
     @SerialName("guild_id")
-    val guildId: Snowflake,
+    val guildId: Snowflake? = null,
     @SerialName("channel_id")
-    val channelId: Snowflake,
+    val channelId: Snowflake?,
     @SerialName("user_id")
     val userId: Snowflake,
     val member: GuildMember? = null,
@@ -24,8 +24,8 @@ data class VoiceState(
     @SerialName("self_mute")
     val selfMute: Boolean,
     @SerialName("self_stream")
-    val selfStream: Boolean = false,
+    val selfStream: Boolean? = null,
     @SerialName("self_video")
-    val selfVideo: Boolean = false,
+    val selfVideo: Boolean,
     val suppress: Boolean
 )

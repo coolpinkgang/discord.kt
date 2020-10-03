@@ -5,6 +5,7 @@ import io.github.romangraef.discordkt.models.*
 import io.github.romangraef.discordkt.models.channel.Channel
 import io.github.romangraef.discordkt.models.emoji.Emoji
 import io.github.romangraef.discordkt.models.serial.*
+import io.github.romangraef.discordkt.models.voice.VoiceState
 
 import java.time.OffsetDateTime
 
