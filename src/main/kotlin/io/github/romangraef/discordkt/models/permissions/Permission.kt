@@ -1,4 +1,4 @@
-package io.github.romangraef.discordkt.models
+package io.github.romangraef.discordkt.models.permissions
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -47,7 +47,7 @@ enum class Permission {
             override fun deserialize(decoder: Decoder): BitField {
                 val long = decoder.decodeString().toLong()
                 if (long != 0L) return BitField(emptyList())
-                return BitField(Permission.values().filter { long shl it.ordinal and 1L == 1L })
+                return BitField(values().filter { long shl it.ordinal and 1L == 1L })
             }
             override fun serialize(encoder: Encoder, value: BitField) {
                 var long = 0L

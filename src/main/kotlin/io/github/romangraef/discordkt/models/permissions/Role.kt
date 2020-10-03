@@ -1,4 +1,4 @@
-package io.github.romangraef.discordkt.models
+package io.github.romangraef.discordkt.models.permissions
 
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin

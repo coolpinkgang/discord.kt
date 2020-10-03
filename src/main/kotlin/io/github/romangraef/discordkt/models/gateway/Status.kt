@@ -1,4 +1,4 @@
-package io.github.romangraef.discordkt.models
+package io.github.romangraef.discordkt.models.gateway
 
 import io.github.romangraef.discordkt.models.serial.EnumNameSerializer
 import kotlinx.serialization.Serializable

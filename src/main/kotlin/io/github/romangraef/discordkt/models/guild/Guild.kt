@@ -1,9 +1,11 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models.guild
 
-import io.github.romangraef.discordkt.models.*
 import io.github.romangraef.discordkt.models.channel.Channel
 import io.github.romangraef.discordkt.models.emoji.Emoji
+import io.github.romangraef.discordkt.models.gateway.PresenceUpdate
+import io.github.romangraef.discordkt.models.permissions.Permission
+import io.github.romangraef.discordkt.models.permissions.Role
 import io.github.romangraef.discordkt.models.serial.*
 import io.github.romangraef.discordkt.models.voice.VoiceState
 
