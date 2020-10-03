@@ -3,7 +3,7 @@ package io.github.romangraef.discordkt.models.channel
 
 import io.github.romangraef.discordkt.models.guild.GuildMember
 import io.github.romangraef.discordkt.models.Role
-import io.github.romangraef.discordkt.models.User
+import io.github.romangraef.discordkt.models.user.User
 import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.serial.SnowflakeMixin

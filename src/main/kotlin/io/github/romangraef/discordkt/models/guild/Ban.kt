@@ -1,6 +1,7 @@
 package io.github.romangraef.discordkt.models.guild
 
-import io.github.romangraef.discordkt.models.User
+import io.github.romangraef.discordkt.models.user.User
+
 import kotlinx.serialization.Serializable
 
 @Serializable
