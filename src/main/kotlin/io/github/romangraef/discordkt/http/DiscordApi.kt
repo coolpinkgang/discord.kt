@@ -15,10 +15,10 @@ suspend fun HttpClient.execute(method: HttpMethod, url: String, body: String): S
 }.readText()
 
 suspend fun <RESULT> HttpClient.execute(json: Json, route: RouteWithoutBody<RESULT>) =
-    json.decodeFromString(route.resultDeserializer, execute(route.method, route.url, ""))
+    json.decodeFromString(route.resultDeserializer, execute(route.method, route.urlWithQuery, ""))
 
 suspend fun <RESULT, BODY> HttpClient.execute(json: Json, route: RouteWithBody<RESULT, BODY>, body: BODY) =
     json.decodeFromString(
         route.resultDeserializer,
-        execute(route.method, route.url, json.encodeToString(route.bodySerializer, body))
+        execute(route.method, route.urlWithQuery, json.encodeToString(route.bodySerializer, body))
     )

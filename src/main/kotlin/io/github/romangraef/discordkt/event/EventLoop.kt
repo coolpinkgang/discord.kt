@@ -2,10 +2,9 @@ package io.github.romangraef.discordkt.event
 
 import kotlin.reflect.KClass
 
-
 interface Event
 
-interface EventHandler<T : Event> {
+interface EventHandler<in T : Event> {
     suspend fun invoke(event: T)
 
     companion object {
@@ -94,6 +93,7 @@ class LateProxyEventLoop : AbstractEventLoop {
         proxy = loop
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : Event> on(kClass: KClass<out T>, handler: EventHandler<T>) {
         val p = proxy
         if (p != null) {
@@ -115,6 +115,7 @@ class EventLoop : AbstractEventLoop {
     private val handlers =
         mutableMapOf<KClass<out Event>, MutableList<EventHandler<Event>>>().withDefault { mutableListOf() }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : Event> on(kClass: KClass<out T>, handler: EventHandler<T>) {
         handlers[kClass]!!.add(handler as EventHandler<Event>)
     }
