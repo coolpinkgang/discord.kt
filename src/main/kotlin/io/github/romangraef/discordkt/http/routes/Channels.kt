@@ -20,4 +20,6 @@ object Channels {
         query("after", after)
         query("limit", limit)
     }
+    fun GET_CHANNEL_MESSAGE(channelId: Snowflake, messageId: Snowflake) =
+        GET<Message>("/channels/$channelId/messages/$messageId")
 }
