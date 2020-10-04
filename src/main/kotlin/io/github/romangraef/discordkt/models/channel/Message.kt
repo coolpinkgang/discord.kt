@@ -31,18 +31,20 @@ data class Message(
         @SerialName("mention_everyone")
     val mentionEveryone: Boolean,
         val mentions: List<User>,
-        @SerialName("mention_role")
+        @SerialName("mention_roles")
     val mentionRoles: List<Role>,
-        val mentionChannels: List<ChannelMention>,
+        @SerialName("mention_channels")
+        val mentionChannels: List<ChannelMention>? = emptyList(),
         val attachments: List<Attachment>,
         val embeds: List<Embed>,
         val reactions: List<Reaction>? = null,
-        val nonce: Int? = null, //or string
+        val nonce: Int? = null, //TODO: or string
         val pinned: Boolean,
         @SerialName("webhook_id")
     val webhookId: Snowflake,
         val activity: MessageActivity? = null,
         val application: MessageApplication? = null,
         @SerialName("message_reference")
-    val messageReference: MessageReference? = null
+    val messageReference: MessageReference? = null,
+    val flags: MessageFlag.BitField? = null
 ) : SnowflakeMixin()

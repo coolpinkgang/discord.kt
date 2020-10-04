@@ -15,7 +15,7 @@ class SnowflakeTest : StringSpec({
     "Snowflake Serialization" {
         val json = Json {}
         val longValue = Random.nextLong()
-        val snowflake = Snowflake(longValue.toString())
+        val snowflake = Snowflake.of(longValue.toString())
         snowflake.longId shouldBe longValue
         val serialResult = json.encodeToJsonElement(snowflake)
         assert(serialResult is JsonPrimitive && serialResult.isString) { "$serialResult should be a json primitve string" }

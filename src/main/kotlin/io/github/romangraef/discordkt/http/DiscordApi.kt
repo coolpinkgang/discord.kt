@@ -9,7 +9,9 @@ import io.ktor.client.statement.readText
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
 
-suspend fun HttpClient.execute(method: HttpMethod, url: String, body: String): String = this.request<HttpResponse>(url) {
+const val BASE_URL = "https://discord.com/api/v8"
+
+suspend fun HttpClient.execute(method: HttpMethod, url: String, body: String): String = this.request<HttpResponse>("$BASE_URL$url") {
     this.method = method
     this.body = body
 }.readText()

@@ -1,6 +1,5 @@
 package io.github.romangraef.discordkt.models.emoji
 
-import io.github.romangraef.discordkt.models.emoji.Emoji
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.containExactly
@@ -32,7 +31,7 @@ class EmojiTest : StringSpec({
         emoji.longId shouldBe 41771983429993937L
         emoji.name shouldBe "LUL"
         emoji.roles should containExactly(
-            Snowflake("41771983429993000"), Snowflake("41771983429993111")
+            Snowflake.of(41771983429993000L), Snowflake.of(41771983429993111L)
         )
         emoji.user!!.username shouldBe "Luigi"
         emoji.user!!.discriminator shouldBe "0002"

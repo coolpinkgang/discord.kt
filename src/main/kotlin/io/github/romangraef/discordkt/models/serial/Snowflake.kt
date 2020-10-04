@@ -12,12 +12,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = Snowflake.Serializer::class)
-data class Snowflake(
-    override val stringId: String
+class Snowflake private constructor(
+    override val longId: Long
 ) : BaseSnowflake {
-    override val longId = stringId.toLong()
-    override val asSnowflake: Snowflake
-        get() = this
+    override val stringId get() = longId.toString()
+    override val asSnowflake get() = this
 
     override fun equals(other: Any?): Boolean = other != null && other == longId
     override fun hashCode(): Int = longId.hashCode()
@@ -25,7 +24,7 @@ data class Snowflake(
 
     class Serializer : KSerializer<Snowflake> {
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Snowflake", PrimitiveKind.STRING)
-        override fun deserialize(decoder: Decoder): Snowflake = Snowflake(decoder.decodeString())
+        override fun deserialize(decoder: Decoder): Snowflake = of(decoder.decodeString())
         override fun serialize(encoder: Encoder, value: Snowflake) = encoder.encodeString(value.stringId)
     }
 
@@ -38,7 +37,8 @@ data class Snowflake(
         fun of(discordEpoch: Long, workerId: Long, processId: Long, incrementId: Long) =
             of((discordEpoch shl 22) or (workerId shl 17) or (processId shl 12) or incrementId)
 
-        fun of(longId: Long) = Snowflake(longId.toString())
+        fun of(longId: Long) = Snowflake(longId)
+        fun of(stringId: String) = Snowflake(stringId.toLong())
     }
 }
 

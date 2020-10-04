@@ -82,11 +82,11 @@ class TextChannelTests : StringSpec({
             it.guildId?.longId shouldBe 455265814191276037L
             it.permissionOverwrites should containExactly(
                 Overwrite(
-                    Snowflake("455265814191276037"),
+                    Snowflake.of(455265814191276037L),
                     OverwriteType.ROLE, "0", "1024", 0, 1024
                 ),
                 Overwrite(
-                    Snowflake("467792830786699286"),
+                    Snowflake.of(467792830786699286L),
                     OverwriteType.ROLE, "1024", "0", 1024, 0
                 )
             )
