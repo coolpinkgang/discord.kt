@@ -7,7 +7,7 @@ import io.github.romangraef.discordkt.models.invite.InviteWithMetadata
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.user.User
 
-object Channels {
+object ChannelRoutes {
     fun GET_CHANNEL(channelId: Snowflake) = GET<Channel>("/channels/$channelId")
     fun MODIFY_CHANNEL(channelId: Snowflake) = PATCH<Channel, Channel>("/channels/$channelId")
     fun DELETE_CHANNEL(channelId: Snowflake) = DELETE<Channel>("/channels/$channelId")
@@ -55,4 +55,20 @@ object Channels {
         GET<List<InviteWithMetadata>>("/channels/$channelId/invites")
     fun CREATE_CHANNEL_INVITE(channelId: Snowflake) =
         POST<Invite, InviteCreate>("/channels/$channelId/invites")
+    fun DELETE_CHANNEL_PERMISSION(channelId: Snowflake, overwriteId: Snowflake) =
+        DELETE<Unit>("/channels/$channelId/permissions/$overwriteId")
+    fun FOLLOW_NEWS_CHANNEL(channelId: Snowflake) =
+        POST<FollowedChannel, FollowNewsChannel>("/channels/$channelId/followers")
+    fun TRIGGER_TYPING_INDECATOR(channelId: Snowflake) =
+        POST<Unit, Unit>("/channels/$channelId/typing")
+    fun GET_PINNED_MESSAGES(channelId: Snowflake) =
+        GET<List<Message>>("/channels/$channelId/pins")
+    fun ADD_PINNED_CHANNEL_MESSAGE(channelId: Snowflake, messageId: Snowflake) =
+        PUT<Unit, Unit>("/channels/$channelId/pins/$messageId")
+    fun DELETE_PINNED_CHANNEL_MESSAGE(channelId: Snowflake, messageId: Snowflake) =
+        DELETE<Unit>("/channels/$channelId/pins/$messageId")
+    fun GROUP_DM_ADD_RECIPIENT(channelId: Snowflake, userId: Snowflake) =
+        PUT<Unit, GroupDMAddRecipient>("/channels/$channelId/recipients/$userId")
+    fun GROUP_DM_REMOVE_RECIPIENT(channelId: Snowflake, userId: Snowflake) =
+        DELETE<Unit>("/channels/$channelId/recipients/$userId")
 }
