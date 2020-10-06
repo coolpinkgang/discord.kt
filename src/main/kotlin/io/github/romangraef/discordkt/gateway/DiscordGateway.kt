@@ -9,16 +9,16 @@ import io.github.romangraef.discordkt.models.serial.IDBasedSerializer
 import io.github.romangraef.discordkt.models.serial.IDEnum
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.features.websocket.ClientWebSocketSession
 import io.ktor.client.features.websocket.DefaultClientWebSocketSession
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.webSocketSession
 import io.ktor.client.request.url
+import io.ktor.http.cio.websocket.CloseReason
 import io.ktor.http.cio.websocket.Frame
+import io.ktor.http.cio.websocket.close
 import io.ktor.http.cio.websocket.readText
 import java.util.concurrent.Executors
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.delay
@@ -88,18 +88,19 @@ class DiscordGateway(val token: String) {
                 GatewayOperator.RECONNECT -> println("TODO: reconnect")
                 GatewayOperator.INVALIDATE_SESSION -> println("TODO: invalidate session")
                 GatewayOperator.HELLO -> setupHeartbeat(it.payload)
-                GatewayOperator.HEARTBEAT_ACK -> println("TODO: heartbt ack handling")
+                GatewayOperator.HEARTBEAT_ACK -> lastHeartbeatAckAtNs = System.nanoTime()
                 else -> loop.emit(UnknownGatewayOpcodeReceived(it.payload))
             }
         }
     }
-    private var lastHeartbeatSentAt = 0L
+    private var lastHeartbeatSentAtNs = 0L
+    private var lastHeartbeatAckAtNs = 0L
+    private var heartbeatIntervalMs = 0L
     private var websocketSession: DefaultClientWebSocketSession? = null
     private val mutex = Mutex()
     var lastSequenceNumber: Int? = null
 
-    @OptIn(InternalCoroutinesApi::class)
-    suspend fun loop() {
+    private suspend fun loop() {
         mutex.withLock {
             if (websocketSession != null) return@loop
             println("Starting websocket session")
@@ -112,7 +113,6 @@ class DiscordGateway(val token: String) {
             while (!websocketSession!!.incoming.isClosedForReceive) {
                 val frame = websocketSession!!.incoming.receive() as? Frame.Text ?: continue
                 val payload = json.decodeFromString<GatewayPayload>(frame.readText())
-                println("Received: $payload")
                 events.emitAsync(RawGatewayReceivedEvent(payload))
             }
         } catch (e: ClosedReceiveChannelException) {
@@ -136,22 +136,28 @@ class DiscordGateway(val token: String) {
         )
     }
 
+    suspend fun close(reason: Short, message: String) {
+        websocketSession!!.close(CloseReason(reason, "Closed"))
+    }
+
     private suspend fun setupHeartbeat(payload: GatewayPayload) {
         val hello = json.decodeFromJsonElement<Hello>(payload.data!!)
-        val heartbeatMs = hello.heartbeatInterval.toLong()
+        heartbeatIntervalMs = hello.heartbeatInterval.toLong()
         scope.launch(Executors.newSingleThreadExecutor().asCoroutineDispatcher()) {
             sendHeartbeat()
             sendIdentify()
             while (true) {
-                delay(heartbeatMs)
+                delay(heartbeatIntervalMs)
+                val lostAckMs = (lastHeartbeatAckAtNs - lastHeartbeatSentAtNs)/ 1000
+                if (lostAckMs  >= 2 * heartbeatIntervalMs)
+                    close(4000, "Missed heartbeat by $lostAckMs ms")
                 sendHeartbeat()
             }
         }
-
     }
 
     private suspend fun sendHeartbeat() {
-        lastHeartbeatSentAt = System.nanoTime()
+        lastHeartbeatSentAtNs = System.nanoTime()
         sendToGateway(GatewayPayload(GatewayOperator.HEARTBEAT, JsonPrimitive(lastSequenceNumber)))
     }
 
