@@ -41,7 +41,7 @@ data class Message(
     val nonce: Int? = null, //TODO: or string
     val pinned: Boolean,
     @SerialName("webhook_id")
-    val webhookId: Snowflake,
+    val webhookId: Snowflake? = null,
     val type: MessageType,
     val activity: MessageActivity? = null,
     val application: MessageApplication? = null,
