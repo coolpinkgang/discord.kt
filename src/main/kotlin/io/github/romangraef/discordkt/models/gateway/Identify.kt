@@ -14,5 +14,6 @@ data class Identify(
     val presence: GatewayStatusUpdate? = null,
     @SerialName("guild_subscriptions")
     val guildSubscriptions: Boolean? = null,
-    val intents: Int? = null
+    val intents: Intent.BitField? = null
 )
+
