@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GuildWidgetStructure(
+data class GuildWidget(
     val enabled: Boolean,
     @SerialName("channel_id")
     val channelId: Snowflake?
