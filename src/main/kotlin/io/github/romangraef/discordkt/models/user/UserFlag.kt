@@ -15,6 +15,7 @@ enum class UserFlag {
     HOUSE_BALANCE,
     EARLY_SUPPORTER,
     TEAM_USER,
+    NULL_12,
     SYSTEM,
     NULL_13,
     BUG_HUNTER_LEVEL_2,
