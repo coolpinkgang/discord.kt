@@ -8,7 +8,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Ready(
-    val v: Int,
+    @SerialName("v")
+    val version: Int,
     val user: User,
     @SerialName("private_channels")
     val privateChannels: List<Unit> = emptyList(),

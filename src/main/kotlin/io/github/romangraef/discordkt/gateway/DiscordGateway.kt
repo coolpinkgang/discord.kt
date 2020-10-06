@@ -1,5 +1,6 @@
 package io.github.romangraef.discordkt.gateway
 
+import io.github.romangraef.discordkt.event.AbstractEventLoop
 import io.github.romangraef.discordkt.event.Event
 import io.github.romangraef.discordkt.event.EventLoop
 import io.github.romangraef.discordkt.models.gateway.GatewayEvent
@@ -14,6 +15,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.features.websocket.DefaultClientWebSocketSession
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.webSocketSession
+import io.ktor.client.request.header
 import io.ktor.client.request.url
 import io.ktor.http.cio.websocket.CloseReason
 import io.ktor.http.cio.websocket.Frame
@@ -22,6 +24,7 @@ import io.ktor.http.cio.websocket.readText
 import java.util.concurrent.Executors
 import kotlin.random.Random
 import kotlin.random.nextInt
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
@@ -72,59 +75,66 @@ data class GatewayPayload(
 data class RawGatewayReceivedEvent(val payload: GatewayPayload) : Event
 data class UnknownGatewayOpcodeReceived(val payload: GatewayPayload) : Event
 data class GatewayDispatchReceived(val data: JsonElement, val type: String) : Event
-class DiscordGateway(val token: String) {
-    val client = HttpClient(OkHttp) {
+class DiscordGateway(
+    val token: String,
+    val client: HttpClient = HttpClient(OkHttp) {
         WebSockets {
 
         }
-    }
-    val json = Json {
+    },
+    val json: Json = Json {
         ignoreUnknownKeys = true
-    }
-    val scope = GlobalScope
-    val events = EventLoop(scope).also { loop ->
-        loop.on<RawGatewayReceivedEvent> {
+    },
+    val intents: Intent.BitField = Intent.ALL_INTENTS,
+    val scope: CoroutineScope = GlobalScope,
+    val events: AbstractEventLoop = EventLoop(scope),
+) {
+    init {
+        events.on<RawGatewayReceivedEvent> {
             if (it.payload.sequenceNumber != null)
                 lastSequenceNumber = it.payload.sequenceNumber
             when (it.payload.operator) {
-                GatewayOperator.DISPATCH -> loop.emit(GatewayDispatchReceived(it.payload.data!!, it.payload.type!!))
+                GatewayOperator.DISPATCH -> events.emit(GatewayDispatchReceived(it.payload.data!!, it.payload.type!!))
                 GatewayOperator.HEARTBEAT -> sendHeartbeat()
                 GatewayOperator.RECONNECT -> reconnectWithDelay()
                 GatewayOperator.INVALIDATE_SESSION -> println("TODO: invalidate session")
                 GatewayOperator.HELLO -> setupHeartbeat(it.payload)
                 GatewayOperator.HEARTBEAT_ACK -> lastHeartbeatAckAtNs = System.nanoTime()
-                else -> loop.emit(UnknownGatewayOpcodeReceived(it.payload))
+                else -> events.emit(UnknownGatewayOpcodeReceived(it.payload))
             }
         }
     }
+
     private var lastHeartbeatSentAtNs = 0L
     private var lastHeartbeatAckAtNs = 0L
     private var heartbeatIntervalMs = 0L
     private var websocketSession: DefaultClientWebSocketSession? = null
     private var reconnectAfter = 0
     private val mutex = Mutex()
+    var latencyMs: Long = -1L
+        private set
     var lastSequenceNumber: Int? = null
 
     private suspend fun loop() {
-        while (reconnectAfter >= 0) {
-            delay(reconnectAfter.toLong())
-            reconnectAfter = -1
-            mutex.withLock {
-                if (websocketSession != null) return@loop
+        mutex.withLock {
+            if (websocketSession != null) return@loop
+            while (reconnectAfter >= 0) {
+                delay(reconnectAfter.toLong())
+                reconnectAfter = -1
                 println("Starting websocket session")
                 websocketSession = client.webSocketSession {
                     url(host = "gateway.discord.gg", path = "/?v=8&encoding=json", scheme = "wss")
+                    header("Accept-Encoding", "gzip")
                 }
-            }
-            // TODO header gzip
-            try {
-                while (!websocketSession!!.incoming.isClosedForReceive) {
-                    val frame = websocketSession!!.incoming.receive() as? Frame.Text ?: continue
-                    val payload = json.decodeFromString<GatewayPayload>(frame.readText())
-                    events.emitAsync(RawGatewayReceivedEvent(payload))
+                try {
+                    while (!websocketSession!!.incoming.isClosedForReceive) {
+                        val frame = websocketSession!!.incoming.receive() as? Frame.Text ?: continue
+                        val payload = json.decodeFromString<GatewayPayload>(frame.readText())
+                        events.emitAsync(RawGatewayReceivedEvent(payload))
+                    }
+                } catch (e: ClosedReceiveChannelException) {
+                    println("Websocket closed: " + websocketSession!!.closeReason.await())
                 }
-            } catch (e: ClosedReceiveChannelException) {
-                println("Websocket closed: " + websocketSession!!.closeReason.await())
             }
         }
     }
@@ -140,7 +150,7 @@ class DiscordGateway(val token: String) {
             Identify(
                 token, IdentifyConnection(System.getProperty("os.name"), "discord.kt", "discord.kt"),
                 shard = null,
-                intents = Intent.ALL_INTENTS,
+                intents = intents,
             ),
         )
     }
@@ -167,9 +177,11 @@ class DiscordGateway(val token: String) {
             sendIdentify()
             while (true) {
                 delay(heartbeatIntervalMs)
-                val lostAckMs = (lastHeartbeatAckAtNs - lastHeartbeatSentAtNs) / 1000
-                if (lostAckMs >= 2 * heartbeatIntervalMs)
-                    close(4000, "Missed heartbeat by $lostAckMs ms")
+                val websocketLatencyMs = (lastHeartbeatAckAtNs - lastHeartbeatSentAtNs) / 1000
+                if (websocketLatencyMs >= 2 * heartbeatIntervalMs)
+                    close(4000, "Missed heartbeat by $websocketLatencyMs ms")
+                else
+                    latencyMs = websocketLatencyMs
                 sendHeartbeat()
             }
         }
