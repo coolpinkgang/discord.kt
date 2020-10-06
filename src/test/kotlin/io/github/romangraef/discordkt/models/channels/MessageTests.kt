@@ -56,7 +56,7 @@ class MessageTests : StringSpec({
             it.tts shouldBe false
             it.timestamp shouldBe OffsetDateTime.of(
                 2020, 10, 3,
-                17, 3, 22, 761000, ZoneOffset.ofHours(0)
+                17, 3, 22, 761000000, ZoneOffset.ofHours(0)
             )
             it.editedTimestamp shouldBe null
             it.flags!! should beEmpty()
