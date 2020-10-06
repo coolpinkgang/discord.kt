@@ -13,7 +13,7 @@ interface IDEnum {
 
 abstract class IDBasedSerializer<T : IDEnum>(values: Array<T>) : KSerializer<T> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("IDBasedSerializer", PrimitiveKind.INT)
-    private val bufferedValues = arrayOfNulls<IDEnum>(values.map { it.id }.maxOrNull()!!).also {
+    private val bufferedValues = arrayOfNulls<IDEnum>(values.map { it.id }.maxOrNull()!! +1).also {
         values.forEach { value -> it[value.id] = value }
     }
 

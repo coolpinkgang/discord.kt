@@ -10,7 +10,7 @@ data class Identify(
     val compress: Boolean? = null,
     @SerialName("large_threshold")
     val largeThreshold: Int? = null,
-    val shard: Pair<Int, Int>,
+    val shard: Pair<Int, Int>? = null,
     val presence: GatewayStatusUpdate? = null,
     @SerialName("guild_subscriptions")
     val guildSubscriptions: Boolean? = null,

@@ -1,6 +1,8 @@
 package io.github.romangraef.discordkt.event
 
 import kotlin.reflect.KClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 interface Event
 
@@ -21,13 +23,15 @@ class ExceptionInHandlerEvent(val throwable: Throwable, val handler: EventHandle
 /**
  * Event loop for coroutines.
  */
-interface AbstractEventLoop {
+abstract class AbstractEventLoop {
     /**
      * Distribute an Event to all listeners that listen to that event, or to a subclass of
      *
      * @param event The event to be distributed
      */
-    suspend fun emit(event: Event)
+    abstract suspend fun emit(event: Event)
+
+    abstract fun emitAsync(event: Event)
 
     /**
      * Register a handler for an Event and all subclasses
@@ -35,7 +39,7 @@ interface AbstractEventLoop {
      * @param kClass the kotlin class of the upper bound of the events to handle
      * @param handler the handler to invoke for each event
      */
-    fun <T : Event> on(kClass: KClass<out T>, handler: EventHandler<T>)
+    abstract fun <T : Event> on(kClass: KClass<out T>, handler: EventHandler<T>)
 
     /**
      * Register a handler for an event with an inline function
@@ -63,26 +67,27 @@ interface AbstractEventLoop {
     fun onException(handler: suspend (ExceptionInHandlerEvent) -> Unit) {
         onException(EventHandler.from(handler))
     }
+
+    /**
+     * @see on
+     */
+    inline fun <reified T : Event> on(handler: EventHandler<T>) {
+        on(T::class, handler)
+    }
+
+    /**
+     * @see on
+     */
+    inline fun <reified T : Event> on(noinline handler: suspend (T) -> Unit) {
+        on(EventHandler.from(handler))
+    }
+
 }
 
-/**
- * @see AbstractEventLoop.on
- */
-inline fun <reified T : Event> AbstractEventLoop.on(handler: EventHandler<T>) {
-    on(T::class, handler)
-}
-
-/**
- * @see AbstractEventLoop.on
- */
-inline fun <reified T : Event> AbstractEventLoop.on(noinline handler: suspend (T) -> Unit) {
-    on(EventHandler.from(handler))
-}
-
-class LateProxyEventLoop : AbstractEventLoop {
+class LateProxyEventLoop : AbstractEventLoop() {
     private var proxy: AbstractEventLoop? = null
     private val cachedHandlers =
-        mutableMapOf<KClass<out Event>, MutableList<EventHandler<Event>>>().withDefault { mutableListOf() }
+        mutableMapOf<KClass<out Event>, MutableList<EventHandler<Event>>>()
 
     fun initProxy(loop: AbstractEventLoop) {
         cachedHandlers.forEach { (k, hs) ->
@@ -99,8 +104,12 @@ class LateProxyEventLoop : AbstractEventLoop {
         if (p != null) {
             p.on(kClass, handler)
         } else {
-            cachedHandlers[kClass]!!.add(handler as EventHandler<Event>)
+            cachedHandlers.computeIfAbsent(kClass) { mutableListOf() }.add(handler as EventHandler<Event>)
         }
+    }
+
+    override fun emitAsync(event: Event) {
+        proxy?.emitAsync(event) ?: throw RuntimeException("Proxy of LateProxyEventLoop has not been initialized")
     }
 
     override suspend fun emit(event: Event) {
@@ -109,7 +118,7 @@ class LateProxyEventLoop : AbstractEventLoop {
 
 }
 
-class EventLoop : AbstractEventLoop {
+class EventLoop(val scope: CoroutineScope) : AbstractEventLoop() {
 
     // Real type Map<KClass<T>, List<Handler<T>>
     private val handlers =
@@ -117,7 +126,7 @@ class EventLoop : AbstractEventLoop {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : Event> on(kClass: KClass<out T>, handler: EventHandler<T>) {
-        handlers[kClass]!!.add(handler as EventHandler<Event>)
+        handlers.computeIfAbsent(kClass) { mutableListOf() }.add(handler as EventHandler<Event>)
     }
 
     override suspend fun emit(event: Event) {
@@ -141,5 +150,11 @@ class EventLoop : AbstractEventLoop {
                 System.err.println("Handling this exception caused another exception: ")
                 exc.throwable.printStackTrace()
             }
+    }
+
+    override fun emitAsync(event: Event) {
+        scope.launch {
+            emit(event)
+        }
     }
 }
