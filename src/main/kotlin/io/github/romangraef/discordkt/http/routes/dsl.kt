@@ -7,18 +7,18 @@ import io.ktor.http.encodeURLQueryComponent
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 
-sealed class RequestMaker
-object NoBodyRequestMaker : RequestMaker()
-class JsonBodyRequestMaker<BODY>(val serializer: KSerializer<BODY>) : RequestMaker()
-sealed class ResponseMaker
-object NoResultResponseMaker : ResponseMaker()
-class JsonResultResponseMaker<RESULT>(val serializer: KSerializer<RESULT>) : ResponseMaker()
-object ByteResultResponseMaker : ResponseMaker()
-class Route<RESULT : ResponseMaker, BODY : RequestMaker>(
+sealed class RequestMaker<BODY>
+object NoBodyRequestMaker : RequestMaker<Unit>()
+class JsonBodyRequestMaker<BODY>(val serializer: KSerializer<BODY>) : RequestMaker<BODY>()
+sealed class ResponseMaker<RESUlt>
+object NoResultResponseMaker : ResponseMaker<Unit>()
+class JsonResultResponseMaker<RESULT>(val serializer: KSerializer<RESULT>) : ResponseMaker<RESULT>()
+object ByteResultResponseMaker : ResponseMaker<ByteArray>()
+class Route<RESULT, BODY>(
     val method: HttpMethod,
     val url: String,
-    val responseMaker: RESULT,
-    val requestMaker: BODY,
+    val responseMaker: ResponseMaker<RESULT>,
+    val requestMaker: RequestMaker<BODY>,
 ) {
     val queryParam = mutableMapOf<String, String>()
 
@@ -42,12 +42,14 @@ operator fun <T : Route<RESULT, BODY>, RESULT, BODY> T.invoke(block: T.() -> Uni
     return this
 }
 
-inline fun <reified OUTPUT, reified BODY> REQUEST(method: HttpMethod, url: String): Route<out ResponseMaker, out RequestMaker> = when {
-    Unit is OUTPUT && Unit is BODY -> Route(method, url, NoResultResponseMaker, NoBodyRequestMaker)
-    Unit is OUTPUT -> Route(method, url, NoResultResponseMaker, JsonBodyRequestMaker(serializer<OUTPUT>()))
-    Unit is BODY -> Route(method, url, JsonResultResponseMaker(serializer<BODY>()), NoBodyRequestMaker)
-    else -> Route(HttpMethod.Post, url, JsonResultResponseMaker(serializer<BODY>()), JsonBodyRequestMaker(serializer<OUTPUT>()))
-}
+@Suppress("UNCHECKED_CAST")
+inline fun <reified OUTPUT, reified BODY> REQUEST(method: HttpMethod, url: String): Route<OUTPUT, BODY> = Route(
+    method, url,
+    if (Unit is OUTPUT) NoResultResponseMaker as ResponseMaker<OUTPUT>
+    else JsonResultResponseMaker(serializer()),
+    if (Unit is BODY) NoBodyRequestMaker as RequestMaker<BODY>
+    else JsonBodyRequestMaker(serializer())
+)
 
 inline fun <reified OUTPUT, reified BODY> POST(url: String) =
     REQUEST<OUTPUT, BODY>(HttpMethod.Post, url)
