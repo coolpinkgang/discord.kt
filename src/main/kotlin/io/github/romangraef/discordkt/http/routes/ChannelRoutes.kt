@@ -17,7 +17,7 @@ object ChannelRoutes {
         before: Snowflake? = null,
         after: Snowflake? = null,
         limit: Int = 50
-    ): RouteWithoutBody<List<Message>> = (GET<List<Message>>("/channels/$channelId/messages")) {
+    ) = (GET<List<Message>>("/channels/$channelId/messages")) {
         query("around", around)
         query("before", before)
         query("after", after)

@@ -1,11 +1,32 @@
 package io.github.romangraef.discordkt.http.routes
 
 import io.github.romangraef.discordkt.models.channel.Channel
-import io.github.romangraef.discordkt.models.guild.*
+import io.github.romangraef.discordkt.models.guild.Ban
+import io.github.romangraef.discordkt.models.guild.Guild
+import io.github.romangraef.discordkt.models.guild.GuildAddMember
+import io.github.romangraef.discordkt.models.guild.GuildBeginPrune
+import io.github.romangraef.discordkt.models.guild.GuildCreate
+import io.github.romangraef.discordkt.models.guild.GuildCreateBan
+import io.github.romangraef.discordkt.models.guild.GuildCreateChannel
+import io.github.romangraef.discordkt.models.guild.GuildCreateIntegration
+import io.github.romangraef.discordkt.models.guild.GuildCreateRole
+import io.github.romangraef.discordkt.models.guild.GuildMember
+import io.github.romangraef.discordkt.models.guild.GuildModify
+import io.github.romangraef.discordkt.models.guild.GuildModifyChannelPositions
+import io.github.romangraef.discordkt.models.guild.GuildModifyIntegration
+import io.github.romangraef.discordkt.models.guild.GuildModifyRole
+import io.github.romangraef.discordkt.models.guild.GuildModifyRolePosition
+import io.github.romangraef.discordkt.models.guild.GuildModifyUser
+import io.github.romangraef.discordkt.models.guild.GuildPreview
+import io.github.romangraef.discordkt.models.guild.GuildWidget
+import io.github.romangraef.discordkt.models.guild.Integration
+import io.github.romangraef.discordkt.models.guild.ModifyCurrentUserNick
+import io.github.romangraef.discordkt.models.guild.WidgetStyleOption
 import io.github.romangraef.discordkt.models.invite.Invite
 import io.github.romangraef.discordkt.models.permissions.Role
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.voice.VoiceRegion
+import io.ktor.http.HttpMethod
 import kotlinx.serialization.json.JsonElement
 
 object GuildRoutes {
@@ -78,14 +99,24 @@ object GuildRoutes {
         PATCH<Unit, GuildModifyIntegration>("/guilds/$guildId/integration/$integrationId")
     fun DELETE_GUILD_INTEGRATION(guildId: Snowflake, integrationId: Snowflake) =
         DELETE<Unit>("/guilds/$guildId/integrations/$integrationId")
+
     fun SYNC_GUILD_INTEGRATION(guildId: Snowflake, integrationId: Snowflake) =
         POST<Unit, Unit>("/guilds/$guildId/integrations/$integrationId/sync")
+
     fun GET_GUILD_WIDGET_SETTINGS(guildId: Snowflake) =
         GET<GuildWidget>("/guilds/$guildId/widget")
+
     fun MODIFY_GUILD_WIDGET(guildId: Snowflake) =
         PATCH<GuildWidget, GuildWidget>("/guilds/$guildId/widget")
+
     fun GET_GUILD_WIDGET(guildId: Snowflake) =
         GET<JsonElement>("/guilds/$guildId/widget.json")
+
     fun GET_GUILD_VANITY_URL(guildId: Snowflake) =
         GET<Invite>("/guilds/$guildId/vanity-url")
+
+    fun GET_GUILD_WIDGET_IMAGE(guildId: Snowflake, widgetStyle: WidgetStyleOption? = null) =
+        (Route(HttpMethod.Get, "/guilds/$guildId/widget.png", ByteResultResponseMaker, NoBodyRequestMaker)) {
+            query("style", widgetStyle)
+        }
 }

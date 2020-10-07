@@ -1,7 +1,8 @@
 
 package io.github.romangraef.discordkt
 
-import io.github.romangraef.discordkt.http.execute
+import io.github.romangraef.discordkt.http.get
+import io.github.romangraef.discordkt.http.request
 import io.github.romangraef.discordkt.http.routes.ChannelRoutes
 import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.ktor.client.HttpClient
@@ -22,7 +23,7 @@ fun main() = runBlocking {
         ignoreUnknownKeys = true
     }
 
-    println(httpClient.execute(json, ChannelRoutes.GET_CHANNEL(Snowflake.of(761287705354567680L))))
-    println(httpClient.execute(json, ChannelRoutes.GET_CHANNEL_MESSAGES(Snowflake.of(761287705354567680L), around = Snowflake.of(761287705354567680L))))
+    println(ChannelRoutes.GET_CHANNEL(Snowflake.of(761287705354567680L)).request(httpClient).get(json))
+    println(ChannelRoutes.GET_CHANNEL_MESSAGES(Snowflake.of(761287705354567680L), around = Snowflake.of(761287705354567680L)).request(httpClient).get(json))
 }
 

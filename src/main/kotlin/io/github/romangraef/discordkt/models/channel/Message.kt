@@ -32,7 +32,7 @@ data class Message(
     val mentionEveryone: Boolean,
     val mentions: List<User>,
     @SerialName("mention_roles")
-    val mentionRoles: List<Role>,
+    val mentionRoles: List<Snowflake>,
     @SerialName("mention_channels")
     val mentionChannels: List<ChannelMention>? = emptyList(),
     val attachments: List<Attachment>,

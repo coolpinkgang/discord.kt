@@ -2,14 +2,23 @@
 
 package io.github.romangraef.discordkt.http.routes
 
-import io.ktor.http.*
+import io.ktor.http.HttpMethod
+import io.ktor.http.encodeURLQueryComponent
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 
-sealed class Route<RESULT>(
+sealed class RequestMaker
+object NoBodyRequestMaker : RequestMaker()
+class JsonBodyRequestMaker<BODY>(val serializer: KSerializer<BODY>) : RequestMaker()
+sealed class ResponseMaker
+object NoResultResponseMaker : ResponseMaker()
+class JsonResultResponseMaker<RESULT>(val serializer: KSerializer<RESULT>) : ResponseMaker()
+object ByteResultResponseMaker : ResponseMaker()
+class Route<RESULT : ResponseMaker, BODY : RequestMaker>(
     val method: HttpMethod,
     val url: String,
-    val resultDeserializer: KSerializer<RESULT>,
+    val responseMaker: RESULT,
+    val requestMaker: BODY,
 ) {
     val queryParam = mutableMapOf<String, String>()
 
@@ -24,39 +33,26 @@ sealed class Route<RESULT>(
             else "$url?" + queryParam.entries.joinToString("&") { (key, value) ->
                 key.encodeURLQueryComponent() + "=" + value.encodeURLQueryComponent()
             }
+
 }
 
-operator fun <T : Route<RESULT>, RESULT> T.invoke(block: T.() -> Unit): T {
+
+operator fun <T : Route<RESULT, BODY>, RESULT, BODY> T.invoke(block: T.() -> Unit): T {
     block()
     return this
 }
 
-
-class RouteWithoutBody<RESULT>(
-    method: HttpMethod,
-    url: String,
-    resultDeserializer: KSerializer<RESULT>,
-) : Route<RESULT>(method, url, resultDeserializer)
-
-class RouteWithBody<RESULT, BODY>(
-    method: HttpMethod,
-    url: String,
-    resultDeserializer: KSerializer<RESULT>,
-    val bodySerializer: KSerializer<BODY>,
-) : Route<RESULT>(method, url, resultDeserializer)
-
-
 inline fun <reified OUTPUT, reified BODY> POST(url: String) =
-    RouteWithBody(HttpMethod.Post, url, serializer<OUTPUT>(), serializer<BODY>())
+    Route(HttpMethod.Post, url, JsonResultResponseMaker(serializer<BODY>()), JsonBodyRequestMaker(serializer<OUTPUT>()))
 
 inline fun <reified OUTPUT> GET(url: String) =
-    RouteWithoutBody(HttpMethod.Get, url, serializer<OUTPUT>())
+    Route(HttpMethod.Get, url, JsonResultResponseMaker(serializer<OUTPUT>()), NoBodyRequestMaker)
 
 inline fun <reified OUTPUT, reified BODY> PUT(url: String) =
-    RouteWithBody(HttpMethod.Put, url, serializer<OUTPUT>(), serializer<BODY>())
+    Route(HttpMethod.Put, url, JsonResultResponseMaker(serializer<OUTPUT>()), JsonBodyRequestMaker(serializer<BODY>()))
 
 inline fun <reified OUTPUT, reified BODY> PATCH(url: String) =
-    RouteWithBody(HttpMethod.Patch, url, serializer<OUTPUT>(), serializer<BODY>())
+    Route(HttpMethod.Patch, url, JsonResultResponseMaker(serializer<OUTPUT>()), JsonBodyRequestMaker(serializer<BODY>()))
 
 inline fun <reified OUTPUT> DELETE(url: String) =
-    RouteWithoutBody(HttpMethod.Delete, url, serializer<OUTPUT>())
+    Route(HttpMethod.Delete, url, JsonResultResponseMaker(serializer<OUTPUT>()), NoBodyRequestMaker)
