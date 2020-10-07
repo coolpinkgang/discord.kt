@@ -42,17 +42,24 @@ operator fun <T : Route<RESULT, BODY>, RESULT, BODY> T.invoke(block: T.() -> Uni
     return this
 }
 
+inline fun <reified OUTPUT, reified BODY> REQUEST(method: HttpMethod, url: String): Route<out ResponseMaker, out RequestMaker> = when {
+    Unit is OUTPUT && Unit is BODY -> Route(method, url, NoResultResponseMaker, NoBodyRequestMaker)
+    Unit is OUTPUT -> Route(method, url, NoResultResponseMaker, JsonBodyRequestMaker(serializer<OUTPUT>()))
+    Unit is BODY -> Route(method, url, JsonResultResponseMaker(serializer<BODY>()), NoBodyRequestMaker)
+    else -> Route(HttpMethod.Post, url, JsonResultResponseMaker(serializer<BODY>()), JsonBodyRequestMaker(serializer<OUTPUT>()))
+}
+
 inline fun <reified OUTPUT, reified BODY> POST(url: String) =
-    Route(HttpMethod.Post, url, JsonResultResponseMaker(serializer<BODY>()), JsonBodyRequestMaker(serializer<OUTPUT>()))
+    REQUEST<OUTPUT, BODY>(HttpMethod.Post, url)
 
 inline fun <reified OUTPUT> GET(url: String) =
-    Route(HttpMethod.Get, url, JsonResultResponseMaker(serializer<OUTPUT>()), NoBodyRequestMaker)
+    REQUEST<OUTPUT, Unit>(HttpMethod.Get, url)
 
 inline fun <reified OUTPUT, reified BODY> PUT(url: String) =
-    Route(HttpMethod.Put, url, JsonResultResponseMaker(serializer<OUTPUT>()), JsonBodyRequestMaker(serializer<BODY>()))
+    REQUEST<OUTPUT, BODY>(HttpMethod.Put, url)
 
 inline fun <reified OUTPUT, reified BODY> PATCH(url: String) =
-    Route(HttpMethod.Patch, url, JsonResultResponseMaker(serializer<OUTPUT>()), JsonBodyRequestMaker(serializer<BODY>()))
+    REQUEST<OUTPUT, BODY>(HttpMethod.Patch, url)
 
 inline fun <reified OUTPUT> DELETE(url: String) =
-    Route(HttpMethod.Delete, url, JsonResultResponseMaker(serializer<OUTPUT>()), NoBodyRequestMaker)
+    REQUEST<OUTPUT, Unit>(HttpMethod.Delete, url)
