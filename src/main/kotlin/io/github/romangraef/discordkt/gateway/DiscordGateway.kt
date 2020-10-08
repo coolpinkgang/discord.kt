@@ -79,14 +79,8 @@ data class UnknownGatewayOpcodeReceived(val payload: GatewayPayload) : Event
 data class GatewayDispatchReceived(val data: JsonElement, val type: String) : Event
 class DiscordGateway(
     val token: String,
-    val client: HttpClient = HttpClient(OkHttp) {
-        WebSockets {
-
-        }
-    },
-    val json: Json = Json {
-        ignoreUnknownKeys = true
-    },
+    val client: HttpClient,
+    val json: Json,
     val intents: Intent.BitField = Intent.ALL_INTENTS,
     val scope: CoroutineScope = GlobalScope,
     val events: AbstractEventLoop = EventLoop(scope),
@@ -168,7 +162,7 @@ class DiscordGateway(
             sendToGateway(
                 GatewayOperator.IDENTIFY,
                 Identify(
-                    token, IdentifyConnection(System.getProperty("os.name"), "discord.kt", "discord.kt"),
+                    token, IdentifyConnection(System.getProperty("os.name"), "DiscordKt.kt", "DiscordKt.kt"),
                     shard = null,
                     intents = intents,
                 ),

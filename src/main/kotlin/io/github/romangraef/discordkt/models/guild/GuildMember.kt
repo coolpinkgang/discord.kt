@@ -1,9 +1,9 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models.guild
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.models.user.User
 import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
-import io.github.romangraef.discordkt.models.serial.Snowflake
 
 import java.time.OffsetDateTime
 

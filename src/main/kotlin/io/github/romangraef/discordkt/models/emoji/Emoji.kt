@@ -1,8 +1,9 @@
 package io.github.romangraef.discordkt.models.emoji
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
 import io.github.romangraef.discordkt.models.user.User
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -17,4 +18,4 @@ data class Emoji(
     val managed: Boolean? = null,
     val animated: Boolean? = null,
     val available: Boolean? = null,
-) : SnowflakeMixin()
+) : SnowflakeMixin

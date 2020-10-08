@@ -1,10 +1,10 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models.channel
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
 import io.github.romangraef.discordkt.models.user.User
 import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
 
 import java.time.OffsetDateTime
 
@@ -38,4 +38,4 @@ data class Channel(
     @SerialName("parent_id")
     val parentId: Snowflake? = null,
     val lastPinTimestamp: OffsetDateTime? = null,
-) : SnowflakeMixin()
+) : SnowflakeMixin

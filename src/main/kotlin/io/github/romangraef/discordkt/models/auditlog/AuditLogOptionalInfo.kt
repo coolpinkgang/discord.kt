@@ -1,6 +1,6 @@
 package io.github.romangraef.discordkt.models.auditlog
 
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

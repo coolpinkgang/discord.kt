@@ -1,9 +1,7 @@
 package io.github.romangraef.discordkt.models.user
 
-import io.github.romangraef.discordkt.models.serial.FlagsSerializer
-import io.github.romangraef.discordkt.models.serial.OrdinalSerializer
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -28,4 +26,4 @@ data class User(
     val premiumType: PremiumType? = null,
     @SerialName("public_flags")
     val publicFlags: UserFlag.BitField? = null
-) : SnowflakeMixin()
+) : SnowflakeMixin

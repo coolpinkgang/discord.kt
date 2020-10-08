@@ -1,9 +1,9 @@
 package io.github.romangraef.discordkt.http.routes
 
-import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.webhook.Webhook
 import io.github.romangraef.discordkt.models.webhook.WebhookCreate
 import io.github.romangraef.discordkt.models.webhook.WebhookModify
+import io.github.romangraef.discordkt.snowflake.Snowflake
 
 object WebhookRoutes {
     fun CREATE_WEBHOOK(channelId: Snowflake) =

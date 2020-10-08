@@ -4,8 +4,8 @@ import io.github.romangraef.discordkt.models.channel.*
 import io.github.romangraef.discordkt.models.invite.Invite
 import io.github.romangraef.discordkt.models.invite.InviteCreate
 import io.github.romangraef.discordkt.models.invite.InviteWithMetadata
-import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.user.User
+import io.github.romangraef.discordkt.snowflake.Snowflake
 
 object ChannelRoutes {
     fun GET_CHANNEL(channelId: Snowflake) = GET<Channel>("/channels/$channelId")

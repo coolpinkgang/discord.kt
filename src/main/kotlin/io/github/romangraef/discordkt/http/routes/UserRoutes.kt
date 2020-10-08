@@ -2,8 +2,8 @@ package io.github.romangraef.discordkt.http.routes
 
 import io.github.romangraef.discordkt.models.channel.Channel
 import io.github.romangraef.discordkt.models.guild.Guild
-import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.user.*
+import io.github.romangraef.discordkt.snowflake.Snowflake
 
 object UserRoutes {
     fun GET_CURRENT_USER() =

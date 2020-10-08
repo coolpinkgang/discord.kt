@@ -1,7 +1,8 @@
 package io.github.romangraef.discordkt.models.channel
 
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
+
 import kotlinx.serialization.SerialName
 
 import kotlinx.serialization.Serializable
@@ -16,4 +17,4 @@ data class Attachment(
     val proxyUrl: String,
     val height: Int?,
     val width: Int?
-) : SnowflakeMixin()
+) : SnowflakeMixin

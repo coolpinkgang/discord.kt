@@ -1,10 +1,10 @@
 package io.github.romangraef.discordkt.models.user
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
 import io.github.romangraef.discordkt.models.guild.Integration
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
-import kotlinx.serialization.SerialName
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,4 +20,4 @@ data class Connection(
     @SerialName("show_activity")
     val showActivity: Boolean,
     val visibility: Visibility
-    ) : SnowflakeMixin()
+    ) : SnowflakeMixin

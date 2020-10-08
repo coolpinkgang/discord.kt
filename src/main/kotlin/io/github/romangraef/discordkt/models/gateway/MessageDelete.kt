@@ -1,7 +1,8 @@
 package io.github.romangraef.discordkt.models.gateway
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.models.guild.Guild
-import io.github.romangraef.discordkt.models.serial.Snowflake
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

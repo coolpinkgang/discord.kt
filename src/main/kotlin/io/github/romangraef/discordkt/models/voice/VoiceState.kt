@@ -1,7 +1,7 @@
 package io.github.romangraef.discordkt.models.voice
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.models.guild.GuildMember
-import io.github.romangraef.discordkt.models.serial.Snowflake
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

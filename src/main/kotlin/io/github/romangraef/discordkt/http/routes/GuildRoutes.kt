@@ -24,8 +24,8 @@ import io.github.romangraef.discordkt.models.guild.ModifyCurrentUserNick
 import io.github.romangraef.discordkt.models.guild.WidgetStyleOption
 import io.github.romangraef.discordkt.models.invite.Invite
 import io.github.romangraef.discordkt.models.permissions.Role
-import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.voice.VoiceRegion
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.ktor.http.HttpMethod
 import kotlinx.serialization.json.JsonElement
 

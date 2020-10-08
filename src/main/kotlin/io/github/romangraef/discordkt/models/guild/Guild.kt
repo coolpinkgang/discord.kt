@@ -1,6 +1,8 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models.guild
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
 import io.github.romangraef.discordkt.models.channel.Channel
 import io.github.romangraef.discordkt.models.emoji.Emoji
 import io.github.romangraef.discordkt.models.gateway.PresenceUpdate
@@ -14,7 +16,6 @@ import java.time.OffsetDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import java.util.*
 
 @Serializable
 data class Guild(
@@ -89,4 +90,4 @@ data class Guild(
     val approximateMemberCount: Int? = null,
     @SerialName("approximate_presence_count")
     val approximatePresenceCount: Int? = null
-) : SnowflakeMixin()
+) : SnowflakeMixin

@@ -1,12 +1,11 @@
 @file:UseSerializers(ISO8601Serializer::class)
 package io.github.romangraef.discordkt.models.channel
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
 import io.github.romangraef.discordkt.models.guild.GuildMember
-import io.github.romangraef.discordkt.models.permissions.Role
 import io.github.romangraef.discordkt.models.user.User
 import io.github.romangraef.discordkt.models.serial.ISO8601Serializer
-import io.github.romangraef.discordkt.models.serial.Snowflake
-import io.github.romangraef.discordkt.models.serial.SnowflakeMixin
 
 import java.time.OffsetDateTime
 
@@ -48,4 +47,4 @@ data class Message(
     @SerialName("message_reference")
     val messageReference: MessageReference? = null,
     val flags: MessageFlag.BitField? = null
-) : SnowflakeMixin()
+) : SnowflakeMixin

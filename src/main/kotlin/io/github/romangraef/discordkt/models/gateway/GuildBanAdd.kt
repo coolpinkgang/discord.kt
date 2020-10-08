@@ -1,6 +1,6 @@
 package io.github.romangraef.discordkt.models.gateway
 
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.models.user.User
 
 import kotlinx.serialization.SerialName

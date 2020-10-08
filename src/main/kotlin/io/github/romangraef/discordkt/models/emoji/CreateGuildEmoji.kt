@@ -1,7 +1,7 @@
 package io.github.romangraef.discordkt.models.emoji
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.models.serial.ImageData
-import io.github.romangraef.discordkt.models.serial.Snowflake
 
 import kotlinx.serialization.Serializable
 

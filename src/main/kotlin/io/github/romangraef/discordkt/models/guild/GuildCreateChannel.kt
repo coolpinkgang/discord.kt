@@ -1,8 +1,9 @@
 package io.github.romangraef.discordkt.models.guild
 
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.models.channel.ChannelType
 import io.github.romangraef.discordkt.models.channel.Overwrite
-import io.github.romangraef.discordkt.models.serial.Snowflake
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

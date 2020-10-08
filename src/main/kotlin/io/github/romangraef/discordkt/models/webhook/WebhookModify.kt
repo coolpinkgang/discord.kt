@@ -1,7 +1,8 @@
 package io.github.romangraef.discordkt.models.webhook
 
 import io.github.romangraef.discordkt.models.serial.ImageData
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

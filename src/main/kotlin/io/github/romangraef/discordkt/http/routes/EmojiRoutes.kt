@@ -3,7 +3,7 @@ package io.github.romangraef.discordkt.http.routes
 import io.github.romangraef.discordkt.models.emoji.CreateGuildEmoji
 import io.github.romangraef.discordkt.models.emoji.Emoji
 import io.github.romangraef.discordkt.models.emoji.ModifyGuildEmoji
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
 
 object EmojiRoutes {
     fun LIST_GUILD_EMOJIS(guildId: Snowflake) =

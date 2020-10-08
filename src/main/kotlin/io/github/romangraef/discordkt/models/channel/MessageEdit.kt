@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MessageEdit(
-    val content: String,
-    val embed: Embed,
-    val flags: MessageFlag.BitField
+    val content: String?,
+    val embed: Embed?,
+    val flags: MessageFlag.BitField?
 )
