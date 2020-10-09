@@ -1,9 +1,12 @@
 package io.github.romangraef.discordkt.api.channel
 
 import io.github.romangraef.discordkt.api.message.Message
+
 import io.github.romangraef.discordkt.http.routes.ChannelRoutes
 import io.github.romangraef.discordkt.models.channel.MessagesBulkDelete
+
 import io.github.romangraef.discordkt.snowflake.Snowflake
+
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 

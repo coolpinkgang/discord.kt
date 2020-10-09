@@ -8,15 +8,10 @@ import io.github.romangraef.discordkt.api.channel.GuildChannel
 import io.github.romangraef.discordkt.api.channel.TextChannel
 import io.github.romangraef.discordkt.api.channel.VoiceChannel
 import io.github.romangraef.discordkt.api.emoji.Emoji
+import io.github.romangraef.discordkt.api.permission.Permission
 import io.github.romangraef.discordkt.api.permission.Role
-import io.github.romangraef.discordkt.api.voice.VoiceState
-import io.github.romangraef.discordkt.models.gateway.PresenceUpdate
-import io.github.romangraef.discordkt.models.guild.*
-import io.github.romangraef.discordkt.models.guild.Guild
-import io.github.romangraef.discordkt.models.permissions.Permission
 import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
-import java.time.OffsetDateTime
 
 class Guild(
     override val discordKt: DiscordKt,
@@ -33,7 +28,7 @@ class Guild(
     val widgetEnabled: Boolean,
     val widgetChannel: GuildChannel,
     val verificationLevel: VerificationLevel,
-    val defaultMessageNotificationsLevel: DefaultMessageNotificationsLevel,
+    val defaultMessageNotificationsLevel: MessageNotificationsLevel,
     val explicitContentFilterLevel: ExplicitContentFilterLevel,
     val roles: List<Role>,
     val emojis: List<Emoji>,

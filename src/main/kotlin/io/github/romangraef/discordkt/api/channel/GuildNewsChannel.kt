@@ -4,8 +4,11 @@ import io.github.romangraef.discordkt.api.DiscordKt
 import io.github.romangraef.discordkt.api.message.Message
 import io.github.romangraef.discordkt.api.guild.Guild
 import io.github.romangraef.discordkt.api.permission.PermissionOverwrite
+
 import io.github.romangraef.discordkt.http.routes.ChannelRoutes
+
 import io.github.romangraef.discordkt.snowflake.Snowflake
+
 import kotlinx.coroutines.async
 
 class GuildNewsChannel(

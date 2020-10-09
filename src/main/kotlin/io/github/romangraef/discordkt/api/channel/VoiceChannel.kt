@@ -3,7 +3,9 @@ package io.github.romangraef.discordkt.api.channel
 import io.github.romangraef.discordkt.api.DiscordKt
 import io.github.romangraef.discordkt.api.guild.Guild
 import io.github.romangraef.discordkt.api.permission.PermissionOverwrite
+
 import io.github.romangraef.discordkt.snowflake.Snowflake
+
 import kotlinx.coroutines.async
 
 class VoiceChannel(

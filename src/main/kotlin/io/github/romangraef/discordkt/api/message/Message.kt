@@ -8,10 +8,10 @@ import io.github.romangraef.discordkt.api.channel.TextChannel
 import io.github.romangraef.discordkt.api.guild.Guild
 import io.github.romangraef.discordkt.api.guild.Member
 import io.github.romangraef.discordkt.api.permission.Role
+import io.github.romangraef.discordkt.api.webhook.Webhook
+
 import io.github.romangraef.discordkt.http.routes.ChannelRoutes
 import io.github.romangraef.discordkt.models.channel.MessageEdit
-import io.github.romangraef.discordkt.models.channel.MessageFlag
-import io.github.romangraef.discordkt.models.webhook.Webhook
 
 import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.snowflake.SnowflakeMixin
@@ -73,7 +73,7 @@ class Message(
     fun edit(content: String? = null, embed: Embed? = null, flags: List<MessageFlag>? = null) = discordKt.scope.async {
         discordKt.routeExecutor.execute(
             ChannelRoutes.EDIT_MESSAGE(channel.id, id),
-            MessageEdit(content, embed.toSerialEmbed(), flags?.let { MessageFlag.BitField(it) })
+            MessageEdit(content, embed.toSerialEmbed(), flags?.let { io.github.romangraef.discordkt.models.channel.MessageFlag.BitField(it) })
         )
     }
 
