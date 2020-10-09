@@ -1,9 +1,11 @@
-package io.github.romangraef.discordkt.cash
+package io.github.romangraef.discordkt.api.configdsl
 
 import io.github.romangraef.discordkt.api.User
 import io.github.romangraef.discordkt.api.guild.Guild
 import io.github.romangraef.discordkt.api.message.Message
+import io.github.romangraef.discordkt.cash.CacheController
 
+@DiscordKtDsl
 class CacheControllerBuilder {
     private val userCachePolicyBuilder = CachePolicyBuilder<User>()
     private val guildCachePolicyBuilder = CachePolicyBuilder<Guild>()

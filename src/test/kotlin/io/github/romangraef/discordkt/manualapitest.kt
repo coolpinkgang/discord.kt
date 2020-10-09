@@ -1,8 +1,8 @@
 package io.github.romangraef.discordkt
 
 import io.github.romangraef.discordkt.api.User
-import io.github.romangraef.discordkt.api.discordKt
-import io.github.romangraef.discordkt.cash.CachePolicyBuilder
+import io.github.romangraef.discordkt.api.configdsl.discordKt
+import io.github.romangraef.discordkt.api.configdsl.CachePolicyBuilder
 import io.github.romangraef.discordkt.event.Event
 val CachePolicyBuilder<User>.inGuilds:(User)->Boolean get() = {true}
 suspend fun main() {

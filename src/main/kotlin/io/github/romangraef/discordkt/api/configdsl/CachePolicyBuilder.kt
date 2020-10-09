@@ -1,4 +1,8 @@
-package io.github.romangraef.discordkt.cash
+package io.github.romangraef.discordkt.api.configdsl
+
+import io.github.romangraef.discordkt.cash.CachePolicy
+
+@DiscordKtDsl
 class CachePolicyBuilder<T>(var cacheSize: Int? = null) {
     var predicate: (T) -> Boolean = { true }
     fun cacheIfAny(vararg predicates: (T) -> Boolean) {
