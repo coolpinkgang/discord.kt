@@ -7,7 +7,7 @@ enum class SystemChannelFlag {
     SUPPRESS_JOIN_NOTIFICATIONS,
     SUPPRESS_PREMIUM_SUBSCRIPTIONS;
     @Serializable(with = BitField.Serializer::class)
-    class BitField(val backingList: List<SystemChannelFlag>) : List<SystemChannelFlag> by backingList {
+    data class BitField(val backingList: List<SystemChannelFlag>) : List<SystemChannelFlag> by backingList {
         class Serializer : FlagsSerializer<SystemChannelFlag, BitField>(SystemChannelFlag::values, ::BitField)
     }
 }

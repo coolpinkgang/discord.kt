@@ -42,7 +42,7 @@ class MessageTests : StringSpec({
             it.longId shouldBe 761996835337928715L
             it.type shouldBe MessageType.DEFAULT
             it.content shouldBe "This is a message"
-            it.channelId shouldBe 761287705354567680L
+            it.channelId.longId shouldBe 761287705354567680L
             it.author.longId shouldBe 310702108997320705L
             it.author.username shouldBe "romangraef89"
             it.author.avatarHash shouldBe "f1fb2bd7862ba7153b98c94bbdb7e750"

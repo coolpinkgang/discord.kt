@@ -41,7 +41,7 @@ enum class Permission {
     MANAGE_WEBHOOKS,
     MANAGE_EMOJIS;
     @Serializable(with = BitField.Serializer::class)
-    class BitField(val backingList: List<Permission>) : List<Permission> by backingList {
+    data class BitField(val backingList: List<Permission>) : List<Permission> by backingList {
         class Serializer : KSerializer<BitField> {
             override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Flag", PrimitiveKind.INT)
             override fun deserialize(decoder: Decoder): BitField {

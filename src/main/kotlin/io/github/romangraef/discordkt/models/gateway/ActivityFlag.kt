@@ -11,7 +11,7 @@ enum class ActivityFlag {
     SYNC,
     PLAY;
     @Serializable(with = BitField.Serializer::class)
-    class BitField(val backingList: List<ActivityFlag>) : List<ActivityFlag> by backingList {
+    data class BitField(val backingList: List<ActivityFlag>) : List<ActivityFlag> by backingList {
         class Serializer : FlagsSerializer<ActivityFlag, BitField>(::values, ::BitField)
     }
 }

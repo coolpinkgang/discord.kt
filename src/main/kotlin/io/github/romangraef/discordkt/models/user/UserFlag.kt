@@ -23,7 +23,7 @@ enum class UserFlag {
     VERIFIED_BOT,
     VERIFIED_BOT_DEVELOPER;
     @Serializable(with = BitField.Serializer::class)
-    class BitField(val backingList: List<UserFlag>) : List<UserFlag> by backingList {
+    data class BitField(val backingList: List<UserFlag>) : List<UserFlag> by backingList {
         class Serializer : FlagsSerializer<UserFlag, BitField>(UserFlag::values, ::BitField)
     }
 }

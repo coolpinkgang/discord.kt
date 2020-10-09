@@ -26,7 +26,7 @@ enum class Intent {
     }
 
     @Serializable(with = BitField.Serializer::class)
-    class BitField(val backingList: List<Intent>) : List<Intent> by backingList {
+    data class BitField(val backingList: List<Intent>) : List<Intent> by backingList {
         object Serializer : FlagsSerializer<Intent, BitField>(values(), ::BitField)
     }
 }

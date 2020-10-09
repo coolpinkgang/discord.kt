@@ -10,7 +10,7 @@ enum class MessageFlag {
     SOURCE_MESSAGE_DELETED,
     URGENT;
     @Serializable(with = MessageFlag.BitField.Serializer::class)
-    class BitField(val backingList: List<MessageFlag>) : List<MessageFlag> by backingList {
+    data class BitField(val backingList: List<MessageFlag>) : List<MessageFlag> by backingList {
         class Serializer : FlagsSerializer<MessageFlag, BitField>(::values, ::BitField)
     }
 }
