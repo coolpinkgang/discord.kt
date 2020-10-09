@@ -20,4 +20,6 @@ interface BaseSnowflake : Comparable<BaseSnowflake> {
         get() = longId and 0xFFF
     val stringId: String
     val longId: Long
+    fun equalsSnowflake(other: Any?) = (other as? BaseSnowflake)?.longId == longId
+    fun hashSnowflake() = longId.hashCode()
 }

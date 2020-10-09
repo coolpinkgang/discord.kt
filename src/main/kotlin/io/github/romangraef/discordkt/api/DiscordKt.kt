@@ -1,25 +1,24 @@
 package io.github.romangraef.discordkt.api
 
-import io.github.romangraef.discordkt.cash.Cash
+import io.github.romangraef.discordkt.cash.CacheController
+import io.github.romangraef.discordkt.cash.CacheControllerBuilder
 import io.github.romangraef.discordkt.event.AbstractEventLoop
 import io.github.romangraef.discordkt.event.EventLoop
 import io.github.romangraef.discordkt.gateway.DiscordGateway
 import io.github.romangraef.discordkt.http.RouteExecutor
 import io.github.romangraef.discordkt.models.gateway.Intent
-
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
-import io.ktor.client.features.*
-import io.ktor.client.features.websocket.*
-import io.ktor.client.request.*
-
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.features.addDefaultResponseValidation
+import io.ktor.client.features.defaultRequest
+import io.ktor.client.features.websocket.WebSockets
+import io.ktor.client.request.HttpRequestPipeline
+import io.ktor.client.request.header
+import java.io.OutputStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-
 import kotlinx.serialization.json.Json
-
-import java.io.OutputStream
 
 /**
  * Initializes and starts a bot
@@ -35,7 +34,8 @@ class DiscordKt private constructor(
     private val eventLoop: AbstractEventLoop,
     private val intents: Intent.BitField,
     val scope: CoroutineScope,
-    val logger: Logger
+    val logger: Logger,
+    val cacheController: CacheController,
 ) {
     private val httpClient: HttpClient = HttpClient(OkHttp) {
         addDefaultResponseValidation() // TODO custom response validation
@@ -50,7 +50,6 @@ class DiscordKt private constructor(
     }
     val routeExecutor: RouteExecutor = RouteExecutor(httpClient, json)
     private val gateway: DiscordGateway = DiscordGateway(token, httpClient, json, intents, scope, eventLoop)
-    val cash = Cash(this)
 
     init {
         initHttpClientDebug()
@@ -72,6 +71,8 @@ class DiscordKt private constructor(
     }
 
     class Builder internal constructor(private val token: String) {
+
+        val cacheControllerBuilder = CacheControllerBuilder()
 
         /**
          * The {@link CoroutineScope} in which the gateway and the event handlers will operate in
@@ -112,12 +113,15 @@ class DiscordKt private constructor(
 
         private val eventLoopBuilders: MutableList<EventLoop.() -> Unit> = mutableListOf()
 
+        fun cache(block: CacheControllerBuilder.() -> Unit): Unit = cacheControllerBuilder.run(block)
+
         fun build(): DiscordKt = DiscordKt(
             token,
             EventLoop(scope).apply { eventLoopBuilders.forEach { this.apply(it) } },
             Intent.BitField(intents),
             scope,
-            logger
+            logger,
+            cacheControllerBuilder.build(),
         )
     }
 }

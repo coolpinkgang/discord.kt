@@ -11,8 +11,8 @@ class Snowflake private constructor(
     override val stringId get() = longId.toString()
     override val asSnowflake get() = this
 
-    override fun equals(other: Any?): Boolean = other != null && other == longId
-    override fun hashCode(): Int = longId.hashCode()
+    override fun equals(other: Any?): Boolean = equalsSnowflake(other)
+    override fun hashCode(): Int = hashSnowflake()
     override fun toString(): String = stringId
 
     companion object {
