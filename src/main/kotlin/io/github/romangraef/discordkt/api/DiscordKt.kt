@@ -1,6 +1,6 @@
 package io.github.romangraef.discordkt.api
 
-import io.github.romangraef.discordkt.cash.CacheController
+import io.github.romangraef.discordkt.cache.CacheController
 import io.github.romangraef.discordkt.event.AbstractEventLoop
 import io.github.romangraef.discordkt.gateway.DiscordGateway
 import io.github.romangraef.discordkt.http.RouteExecutor

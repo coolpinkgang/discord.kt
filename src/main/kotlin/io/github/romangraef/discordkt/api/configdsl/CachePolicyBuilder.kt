@@ -1,6 +1,6 @@
 package io.github.romangraef.discordkt.api.configdsl
 
-import io.github.romangraef.discordkt.cash.CachePolicy
+import io.github.romangraef.discordkt.cache.CachePolicy
 
 @DiscordKtDsl
 class CachePolicyBuilder<T>(var cacheSize: Int? = null) {

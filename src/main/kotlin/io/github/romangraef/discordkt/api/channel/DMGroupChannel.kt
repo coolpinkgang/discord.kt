@@ -2,7 +2,7 @@ package io.github.romangraef.discordkt.api.channel
 
 import io.github.romangraef.discordkt.api.DiscordKt
 import io.github.romangraef.discordkt.api.message.Message
-import io.github.romangraef.discordkt.api.User
+import io.github.romangraef.discordkt.api.user.User
 
 import io.github.romangraef.discordkt.http.routes.ChannelRoutes
 import io.github.romangraef.discordkt.models.channel.GroupDMAddRecipient
@@ -12,13 +12,13 @@ import io.github.romangraef.discordkt.snowflake.Snowflake
 import kotlinx.coroutines.async
 
 class DMGroupChannel(
-    override val discordKt: DiscordKt,
-    override val id: Snowflake,
-    override val name: String,
-    override val lastMessage: Message?,
-    val recipients: List<User>,
-    val owner: User,
-    val icon: String,
+        override val discordKt: DiscordKt,
+        override val id: Snowflake,
+        override val name: String,
+        override val lastMessage: Message?,
+        val recipients: List<User>,
+        val owner: User,
+        val icon: String,
 ) : TextChannel, NameableChannel {
 
     fun addRecipient(newRecipient: User, accessToken: String, nick: String = newRecipient.name) = discordKt.scope.async {

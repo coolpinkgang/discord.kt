@@ -1,4 +1,4 @@
-package io.github.romangraef.discordkt.cash
+package io.github.romangraef.discordkt.cache
 
 import io.github.romangraef.discordkt.snowflake.BaseSnowflake
 import io.github.romangraef.discordkt.snowflake.Snowflake

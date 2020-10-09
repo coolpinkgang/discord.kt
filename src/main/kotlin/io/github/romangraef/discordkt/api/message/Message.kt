@@ -2,7 +2,7 @@ package io.github.romangraef.discordkt.api.message
 
 import io.github.romangraef.discordkt.api.ApiModel
 import io.github.romangraef.discordkt.api.DiscordKt
-import io.github.romangraef.discordkt.api.User
+import io.github.romangraef.discordkt.api.user.User
 import io.github.romangraef.discordkt.api.channel.BaseChannel
 import io.github.romangraef.discordkt.api.channel.TextChannel
 import io.github.romangraef.discordkt.api.guild.Guild

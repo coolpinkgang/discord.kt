@@ -16,10 +16,10 @@ suspend fun main() {
         cache {
             users {
                 cacheSize = 500
-                infiniteSize()
             }
             messages {
                 cacheIfAll(isGuildMessage, isPinned)
+                infiniteSize()
             }
         }
     }
