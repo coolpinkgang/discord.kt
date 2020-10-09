@@ -1,9 +1,8 @@
 package io.github.romangraef.discordkt.models
 
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import java.time.OffsetDateTime
 import kotlin.random.Random
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString

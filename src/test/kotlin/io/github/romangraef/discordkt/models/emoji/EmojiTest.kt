@@ -1,6 +1,6 @@
 package io.github.romangraef.discordkt.models.emoji
 
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.containExactly
 import io.kotest.matchers.should

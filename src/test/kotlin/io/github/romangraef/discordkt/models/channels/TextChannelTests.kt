@@ -5,7 +5,8 @@ import io.github.romangraef.discordkt.models.channel.ChannelType
 import io.github.romangraef.discordkt.models.channel.Overwrite
 import io.github.romangraef.discordkt.models.channel.OverwriteType
 import io.github.romangraef.discordkt.models.deserializes
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.models.permissions.Permission
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.collections.containExactly
@@ -55,18 +56,14 @@ class TextChannelTests : StringSpec({
     {
       "id": "455265814191276037",
       "type": "role",
-      "allow": 0,
-      "deny": 1024,
-      "allow_new": "0",
-      "deny_new": "1024"
+      "allow": "0",
+      "deny": "1024"
     },
     {
       "id": "467792830786699286",
       "type": "role",
-      "allow": 1024,
-      "deny": 0,
-      "allow_new": "1024",
-      "deny_new": "0"
+      "allow": "1024",
+      "deny": "0"
     }
   ],
   "nsfw": false,
@@ -83,11 +80,10 @@ class TextChannelTests : StringSpec({
             it.permissionOverwrites should containExactly(
                 Overwrite(
                     Snowflake.of(455265814191276037L),
-                    OverwriteType.ROLE, "0", "1024", 0, 1024
-                ),
+                    OverwriteType.ROLE, Permission.BitField(listOf()), Permission.BitField(listOf(Permission.VIEW_CHANNEL))),
                 Overwrite(
                     Snowflake.of(467792830786699286L),
-                    OverwriteType.ROLE, "1024", "0", 1024, 0
+                    OverwriteType.ROLE, Permission.BitField(listOf(Permission.VIEW_CHANNEL)), Permission.BitField(listOf())
                 )
             )
             it.nsfw shouldBe false

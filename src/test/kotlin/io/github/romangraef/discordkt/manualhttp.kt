@@ -5,7 +5,7 @@ import io.github.romangraef.discordkt.http.RouteExecutor
 import io.github.romangraef.discordkt.http.routes.ChannelRoutes
 import io.github.romangraef.discordkt.models.DiscordFile
 import io.github.romangraef.discordkt.models.UserTest
-import io.github.romangraef.discordkt.models.serial.Snowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.ktor.client.HttpClient
 import io.ktor.client.features.addDefaultResponseValidation
 import io.ktor.client.features.defaultRequest
@@ -23,7 +23,6 @@ fun main() = runBlocking {
     val token = System.getenv("TOKEN")!!
     val httpClient = HttpClient {
         addDefaultResponseValidation() // TODO custom response validation
-            UnsafeHeadersList.
         defaultRequest {
             header("Authorization", "Bot $token")
         }
