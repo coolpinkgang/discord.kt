@@ -1,11 +1,35 @@
 package io.github.romangraef.discordkt.http.routes
 
-import io.github.romangraef.discordkt.models.channel.*
+import io.github.romangraef.discordkt.models.DiscordFile
+import io.github.romangraef.discordkt.models.channel.AllowedMentions
+import io.github.romangraef.discordkt.models.channel.Channel
+import io.github.romangraef.discordkt.models.channel.Embed
+import io.github.romangraef.discordkt.models.channel.FollowNewsChannel
+import io.github.romangraef.discordkt.models.channel.FollowedChannel
+import io.github.romangraef.discordkt.models.channel.GroupDMAddRecipient
+import io.github.romangraef.discordkt.models.channel.Message
+import io.github.romangraef.discordkt.models.channel.MessageEdit
+import io.github.romangraef.discordkt.models.channel.MessagesBulkDelete
+import io.github.romangraef.discordkt.models.channel.OverwriteEdit
 import io.github.romangraef.discordkt.models.invite.Invite
 import io.github.romangraef.discordkt.models.invite.InviteCreate
 import io.github.romangraef.discordkt.models.invite.InviteWithMetadata
+import io.github.romangraef.discordkt.models.serial.Snowflake
 import io.github.romangraef.discordkt.models.user.User
-import io.github.romangraef.discordkt.snowflake.Snowflake
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.append
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.header
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.http.contentType
+import io.ktor.utils.io.core.writeFully
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.put
+import kotlinx.serialization.serializer
 
 object ChannelRoutes {
     fun GET_CHANNEL(channelId: Snowflake) = GET<Channel>("/channels/$channelId")
@@ -23,26 +47,75 @@ object ChannelRoutes {
         query("after", after)
         query("limit", limit)
     }
+
     fun GET_CHANNEL_MESSAGE(channelId: Snowflake, messageId: Snowflake) =
         GET<Message>("/channels/$channelId/messages/$messageId")
+
+    fun CREATE_MESSAGE(
+        channelId: Snowflake,
+        content: String? = null,
+        file: DiscordFile? = null,
+        tts: Boolean = false,
+        embed: Embed? = null,
+        nonce: JsonPrimitive? = null,
+        allowedMentions: AllowedMentions? = null
+    ) =
+        Route(
+            HttpMethod.Post,
+            "/channels/$channelId/messages",
+            JsonResultResponseMaker<Message>(serializer()),
+            CustomRequestMaker<Unit> { _, json ->
+                body = MultiPartFormDataContent(formData {
+                    if (file != null)
+                        append("file", file.name, ContentType.Application.OctetStream, file.bytes.size.toLong()) {
+                            this.writeFully(file.bytes)
+                        }
+                    append("payload_json", json.encodeToString(buildJsonObject {
+                        if (content != null)
+                            put("content", content)
+                        put("tts", tts)
+                        if (embed != null)
+                            put("embed", json.encodeToJsonElement(embed))
+                        if (nonce != null)
+                            put("nonce", nonce)
+                        if (allowedMentions != null)
+                            put("allowed_mentions", json.encodeToJsonElement(allowedMentions))
+                    }))
+                })
+            })
+
     fun CROSSPOST_MESSAGE(channelId: Snowflake, messageId: Snowflake) =
         POST<Message, Unit>("/channels/$channelId/messages/$messageId/crosspost")
+
     fun CREATE_REACTION(channelId: Snowflake, messageId: Snowflake, emojiId: String) =
         PUT<Unit, Unit>("/channels/$channelId/messages/$messageId/reactions/$emojiId/@me")
+
     fun DELETE_OWN_REACTION(channelId: Snowflake, messageId: Snowflake, emojiId: String) =
         DELETE<Unit>("/channels/$channelId/messages/$messageId/reactions/$emojiId/@me")
+
     fun DELETE_USER_REATION(channelId: Snowflake, messageId: Snowflake, emojiId: String, userId: Snowflake) =
         DELETE<Unit>("/channels/$channelId/messages/$messageId/reactions/$emojiId/$userId")
-    fun GET_REACTION(channelId: Snowflake, messageId: Snowflake, emojiId: String, before: Snowflake? = null, after: Snowflake? = null, limit: Int? = 25) =
+
+    fun GET_REACTION(
+        channelId: Snowflake,
+        messageId: Snowflake,
+        emojiId: String,
+        before: Snowflake? = null,
+        after: Snowflake? = null,
+        limit: Int? = 25
+    ) =
         (GET<List<User>>("/channels/$channelId/messages/$messageId/reactions/$emojiId")) {
             query("before", before)
             query("after", after)
             query("limit", limit)
         }
+
     fun DELETE_ALL_REACTIONS(channelId: Snowflake, messageId: Snowflake) =
         DELETE<Unit>("/channels/$channelId/messages/$messageId/reactions")
+
     fun DELETE_ALL_REACTUIBS_FOR_EMOJI(channelId: Snowflake, messageId: Snowflake, emojiId: String) =
         DELETE<Unit>("/channels/$channelId/messages/$messageId/reactions/$emojiId")
+
     fun EDIT_MESSAGE(channelId: Snowflake, messageId: Snowflake) =
         PATCH<Message, MessageEdit>("/channels/$channelId/messages/$messageId")
     fun DELETE_MESSAGE(channelId: Snowflake, messageId: Snowflake) =

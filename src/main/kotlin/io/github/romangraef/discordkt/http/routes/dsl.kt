@@ -2,14 +2,17 @@
 
 package io.github.romangraef.discordkt.http.routes
 
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.HttpMethod
 import io.ktor.http.encodeURLQueryComponent
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
 sealed class RequestMaker<BODY>
 object NoBodyRequestMaker : RequestMaker<Unit>()
 class JsonBodyRequestMaker<BODY>(val serializer: KSerializer<BODY>) : RequestMaker<BODY>()
+class CustomRequestMaker<BODY>(val updateRequest: HttpRequestBuilder.(BODY, Json) -> Unit) : RequestMaker<BODY>()
 sealed class ResponseMaker<RESUlt>
 object NoResultResponseMaker : ResponseMaker<Unit>()
 class JsonResultResponseMaker<RESULT>(val serializer: KSerializer<RESULT>) : ResponseMaker<RESULT>()

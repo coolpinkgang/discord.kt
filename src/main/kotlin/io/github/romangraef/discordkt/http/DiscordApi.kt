@@ -1,6 +1,7 @@
 package io.github.romangraef.discordkt.http
 
 import io.github.romangraef.discordkt.http.routes.ByteResultResponseMaker
+import io.github.romangraef.discordkt.http.routes.CustomRequestMaker
 import io.github.romangraef.discordkt.http.routes.JsonBodyRequestMaker
 import io.github.romangraef.discordkt.http.routes.JsonResultResponseMaker
 import io.github.romangraef.discordkt.http.routes.NoBodyRequestMaker
@@ -30,6 +31,7 @@ class RouteExecutor(val client: HttpClient, val json: Json) {
             when (route.requestMaker) {
                 is NoBodyRequestMaker -> Unit
                 is JsonBodyRequestMaker<BODY> -> body = json.encodeToString(route.requestMaker.serializer, `object`)
+                is CustomRequestMaker<BODY> -> route.requestMaker.updateRequest(this, `object`, json)
             }
         }.also { if (!it.status.isSuccess()) throw HttpRequestException(route, it) }.let {
             when (route.responseMaker) {

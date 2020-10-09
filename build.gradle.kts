@@ -31,6 +31,7 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testRuntimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
+    testImplementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
 }
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
