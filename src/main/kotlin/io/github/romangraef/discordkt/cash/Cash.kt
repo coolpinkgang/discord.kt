@@ -13,22 +13,17 @@ import io.github.romangraef.discordkt.snowflake.Snowflake
 class Cash(val discordKt: DiscordKt) {
     val guilds: MutableList<Guild> = mutableListOf()
     val channels: MutableList<BaseChannel> = mutableListOf()
-    val users: MutableList<User> = mutableListOf()
 
     fun updateGuild(guild: Guild) = guilds.replaceAll { if (it.id == guild.id) guild else it }
     fun updateChannel(channel: BaseChannel) = channels.replaceAll { if (it.id == channel.id) channel else it }
-    fun updateUser(user: User) = users.replaceAll { if (it.id == user.id) user else it }
 
     suspend fun load() = loadUserGuildsAsSnowflake().forEach { snowflake ->
         val channels = discordKt.routeExecutor.execute(GuildRoutes.GET_GUILD_CHANNELS(snowflake))
             .map { BaseChannel.of(it) }
             .also { channels.addAll(it) }
             .map { it as GuildChannel }
-        val members = discordKt.routeExecutor.execute(GuildRoutes.LIST_GUILD_MEMBERS(snowflake))
-            .also { list -> list.map { User.of(it.user!!) }.let { users.addAll(it) } }
-            .map { Member.of(it) }
         discordKt.routeExecutor.execute(GuildRoutes.GET_GUILD(snowflake))
-            .let { Guild.of(it, channels, members) }
+            .let { Guild.of(it, channels) }
             .let { guilds.add(it) }
     }
 

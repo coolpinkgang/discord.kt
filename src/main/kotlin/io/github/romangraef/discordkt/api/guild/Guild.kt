@@ -42,7 +42,6 @@ class Guild(
     val systemChannel: TextChannel,
     val systemChannelFlags: List<SystemChannelFlag>,
     val rulesChannel: TextChannel,
-    val members: List<Member>,
     val channels: List<BaseChannel>,
     val description: String?,
     val banner: String?,
@@ -52,6 +51,6 @@ class Guild(
     val publicUpdatesChannel: TextChannel
 ) : SnowflakeMixin, ApiModel {
     companion object {
-        fun of(guild: Guild, guildChannels: List<GuildChannel>, guildMembers: List<Member>): io.github.romangraef.discordkt.api.guild.Guild = TODO()
+        fun of(guild: Guild, guildChannels: List<GuildChannel>): io.github.romangraef.discordkt.api.guild.Guild = TODO()
     }
 }
