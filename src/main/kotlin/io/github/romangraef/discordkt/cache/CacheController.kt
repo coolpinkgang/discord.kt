@@ -2,10 +2,11 @@ package io.github.romangraef.discordkt.cache
 
 import io.github.romangraef.discordkt.api.ApiModel
 import io.github.romangraef.discordkt.api.DiscordKt
+import io.github.romangraef.discordkt.snowflake.BaseSnowflake
 import kotlin.reflect.KClass
 
 class CacheController(
-    discordKt: DiscordKt,
+    val discordKt: DiscordKt,
     _caches: List<Cache<*, *>>
 ) {
     private val caches = mutableMapOf<KClass<*>, Cache<*, *>>()
@@ -15,6 +16,6 @@ class CacheController(
         _caches.forEach { caches[it.modelClass] = it }
     }
 
-    inline fun <reified T : ApiModel> lookup(): Cache<*, T> = lookup(T::class)
-
+    inline fun <reified T : ApiModel> lookupNoCast(): Cache<*, T> = lookup(T::class)
+    inline fun <reified T : BaseSnowflake, reified V : ApiModel> lookup() = lookupNoCast<V>() as Cache<T, V>
 }
