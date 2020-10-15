@@ -1,25 +1,56 @@
 package io.github.romangraef.discordkt.api.configdsl
 
+import io.github.romangraef.discordkt.api.ApiModel
+import io.github.romangraef.discordkt.api.DiscordKt
 import io.github.romangraef.discordkt.api.user.User
-import io.github.romangraef.discordkt.api.channel.BaseChannel
-import io.github.romangraef.discordkt.api.guild.Guild
-import io.github.romangraef.discordkt.api.message.Message
-import io.github.romangraef.discordkt.cache.CacheController
+import io.github.romangraef.discordkt.cache.CachePolicy
+import io.github.romangraef.discordkt.snowflake.BaseSnowflake
+import io.github.romangraef.discordkt.snowflake.Snowflake
+import kotlin.reflect.KClass
 
 @DiscordKtDsl
 class CacheControllerBuilder {
-    private val userCachePolicyBuilder = CachePolicyBuilder<User>()
-    private val guildCachePolicyBuilder = CachePolicyBuilder<Guild>()
-    private val channelCachePolicyBuilder = CachePolicyBuilder<BaseChannel>()
-    private val messageCachePolicyBuilder = CachePolicyBuilder<Message>()
-    fun users(block: CachePolicyBuilder<User>.() -> Unit): Unit = userCachePolicyBuilder.run(block)
-    fun guilds(block: CachePolicyBuilder<Guild>.() -> Unit): Unit = guildCachePolicyBuilder.run(block)
-    fun channels(block: CachePolicyBuilder<BaseChannel>.() -> Unit): Unit = channelCachePolicyBuilder.run(block)
-    fun messages(block: CachePolicyBuilder<Message>.() -> Unit): Unit = messageCachePolicyBuilder.run(block)
-    fun build() = CacheController(
-        userCachePolicyBuilder.build(),
-        guildCachePolicyBuilder.build(),
-        channelCachePolicyBuilder.build(),
-        messageCachePolicyBuilder.build()
-    )
+    private val policies = mutableMapOf<KClass<out ApiModel>, CachePolicyBuilder<out ApiModel>>()
+
+    fun <T : ApiModel> getPolicyBuilderFor(kClass: KClass<T>) =
+        policies.computeIfAbsent(kClass) { CachePolicyBuilder<T>() } as CachePolicyBuilder<T>
+
+    inline fun <reified T : ApiModel> getPolicyBuilderFor() =
+        getPolicyBuilderFor(T::class)
+
+    inline fun <reified T : ApiModel> policy(noinline builder: CachePolicyBuilder<T>.() -> Unit) {
+        getPolicyBuilderFor<T>().run(builder)
+    }
+
+    companion object {
+        // Second star is for the transformer. Actual signature: (id: BaseSnowflake, discordKt: DiscordKt) -> V
+        private val ALL_CACHED_OBJECTS =
+            mutableMapOf<KClass<out ApiModel>, Pair<*, KClass<out BaseSnowflake>>>()
+
+        fun <V : ApiModel> addCachedObject(
+            kClass: KClass<V>,
+            transformer: (id: Snowflake, discordKt: DiscordKt) -> V,
+            snowflakeClass: KClass<out BaseSnowflake>
+        ) {
+            ALL_CACHED_OBJECTS[kClass] = transformer to snowflakeClass
+        }
+        init{
+            addCachedObject(User::class, ::User, io.github.romangraef.discordkt.models.user.User::class)
+        }
+
+        fun <V : ApiModel> createCacheForPolicy(policy: CachePolicy<V>, kClass: KClass<out V>): PartialCache<out V>? =
+            ALL_CACHED_OBJECTS[kClass]?.let { (transformer, snowflakeClass) ->
+                PartialCache<V>(
+                    policy,
+                    kClass,
+                    snowflakeClass,
+                    transformer as (id: Snowflake, discordKt: DiscordKt) -> V
+                )
+            }
+
+    }
+
+    fun build(): List<PartialCache<out ApiModel>> =
+        policies.map { (modelClass, policy) -> createCacheForPolicy(policy.build(), modelClass as KClass<Nothing>) }
+            .filterNotNull()
 }

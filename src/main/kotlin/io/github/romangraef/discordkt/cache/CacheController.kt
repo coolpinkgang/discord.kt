@@ -1,18 +1,20 @@
 package io.github.romangraef.discordkt.cache
 
-import io.github.romangraef.discordkt.api.user.User
-import io.github.romangraef.discordkt.api.channel.BaseChannel
-import io.github.romangraef.discordkt.api.guild.Guild
-import io.github.romangraef.discordkt.api.message.Message
+import io.github.romangraef.discordkt.api.ApiModel
+import io.github.romangraef.discordkt.api.DiscordKt
+import kotlin.reflect.KClass
 
 class CacheController(
-    userCachePolicy: CachePolicy<User>,
-    guildCachePolicy: CachePolicy<Guild>,
-    channelCachePolicy: CachePolicy<BaseChannel>,
-    messageCachePolicy: CachePolicy<Message>,
+    discordKt: DiscordKt,
+    _caches: List<Cache<*, *>>
 ) {
-    val userCache = Cache(userCachePolicy)
-    val guildCache = Cache(guildCachePolicy)
-    val channelCache = Cache(channelCachePolicy)
-    val messageCache = Cache(messageCachePolicy)
+    private val caches = mutableMapOf<KClass<*>, Cache<*, *>>()
+    fun <T : ApiModel> lookup(modelClass: KClass<T>): Cache<*, T> = caches[modelClass] as Cache<*, T>
+
+    init {
+        _caches.forEach { caches[it.modelClass] = it }
+    }
+
+    inline fun <reified T : ApiModel> lookup(): Cache<*, T> = lookup(T::class)
+
 }

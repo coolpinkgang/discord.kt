@@ -1,5 +1,6 @@
 package io.github.romangraef.discordkt.api
 
+import io.github.romangraef.discordkt.api.configdsl.PartialCache
 import io.github.romangraef.discordkt.cache.CacheController
 import io.github.romangraef.discordkt.event.AbstractEventLoop
 import io.github.romangraef.discordkt.gateway.DiscordGateway
@@ -25,8 +26,9 @@ class DiscordKt (
     private val intents: Intent.BitField,
     val scope: CoroutineScope,
     val logger: Logger,
-    val cacheController: CacheController,
+    caches: List<PartialCache<out ApiModel>>,
 ) {
+    val cacheController = CacheController(this, caches.map { it.complete(this) })
     private val httpClient: HttpClient = HttpClient(OkHttp) {
         addDefaultResponseValidation() // TODO custom response validation
         WebSockets {}
