@@ -1,6 +1,6 @@
 package io.github.romangraef.discordkt.api.message
 
-import io.github.romangraef.discordkt.api.CachedApiModel
+import io.github.romangraef.discordkt.api.CacheableApiModel
 import io.github.romangraef.discordkt.api.DiscordKt
 import io.github.romangraef.discordkt.cache.Cache
 import io.github.romangraef.discordkt.cache.CacheController
@@ -10,7 +10,7 @@ import io.github.romangraef.discordkt.models.channel.Message as ModelMessage
 class Message(
     override val discordKt: DiscordKt,
     override val id: Snowflake,
-) : CachedApiModel<ModelMessage> {
+) : CacheableApiModel<ModelMessage> {
     override val selfCache: Cache<ModelMessage, Message> =
         cache(caches)
     companion object {

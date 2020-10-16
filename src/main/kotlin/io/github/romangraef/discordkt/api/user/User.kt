@@ -1,6 +1,6 @@
 package io.github.romangraef.discordkt.api.user
 
-import io.github.romangraef.discordkt.api.CachedApiModel
+import io.github.romangraef.discordkt.api.CacheableApiModel
 import io.github.romangraef.discordkt.api.DiscordKt
 import io.github.romangraef.discordkt.cache.Cache
 import io.github.romangraef.discordkt.cache.CacheController
@@ -10,7 +10,7 @@ import io.github.romangraef.discordkt.models.user.User as ModelUser
 class User(
     override val id: Snowflake,
     override val discordKt: DiscordKt
-) : CachedApiModel<ModelUser> {
+) : CacheableApiModel<ModelUser> {
     override val selfCache: Cache<ModelUser, User> = caches.lookup()
     val username: String by backing::username
     val bot: Boolean get() = backing.bot == true
