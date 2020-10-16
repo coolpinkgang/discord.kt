@@ -10,10 +10,11 @@ import kotlin.reflect.KClass
 
 @DiscordKtDsl
 class CacheControllerBuilder {
-    private val policies = mutableMapOf<KClass<out ApiModel>, CachePolicyBuilder<out ApiModel>>()
+    private val policies: Map<KClass<out ApiModel>, CachePolicyBuilder<out ApiModel>> =
+        ALL_CACHED_OBJECTS.map { (modelClass, _) -> modelClass to CachePolicyBuilder<ApiModel>() }.toMap()
 
     fun <T : ApiModel> getPolicyBuilderFor(kClass: KClass<T>) =
-        policies.computeIfAbsent(kClass) { CachePolicyBuilder<T>() } as CachePolicyBuilder<T>
+        policies[kClass] as CachePolicyBuilder<T>
 
     inline fun <reified T : ApiModel> getPolicyBuilderFor() =
         getPolicyBuilderFor(T::class)

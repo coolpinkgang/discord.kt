@@ -23,14 +23,14 @@ class Cache<T : BaseSnowflake, V : ApiModel>(
 
     fun refresh(obj: T): T = cachedObjects[obj.asSnowflake] ?: obj
     fun update(obj: T) {
-        if (cachePolicy.shouldCache(transformer(obj.asSnowflake, discordKt) as V))
+        if (cachePolicy.shouldCache(transformer(obj.asSnowflake, discordKt)))
             cachedObjects[obj.asSnowflake] = obj
     }
 
     fun clear() = cachedObjects.clear()
     val size get() = cachedObjects.size
     fun getBackingObject(key: BaseSnowflake): T? = cachedObjects[key]
-    operator fun get(key: BaseSnowflake): V? = cachedObjects[key]?.let { transformer(it.asSnowflake, discordKt) as V }
+    operator fun get(key: BaseSnowflake): V? = cachedObjects[key]?.let { transformer(it.asSnowflake, discordKt) }
 
     fun delegate(id: BaseSnowflake) = CacheDelegate(this, id.asSnowflake)
     fun remove(vararg snowflake: Snowflake) = snowflake.forEach { cachedObjects.remove(it) }

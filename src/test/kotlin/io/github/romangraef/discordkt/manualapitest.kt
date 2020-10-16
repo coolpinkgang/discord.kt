@@ -1,8 +1,6 @@
 package io.github.romangraef.discordkt
 
 import io.github.romangraef.discordkt.api.configdsl.discordKt
-import io.github.romangraef.discordkt.api.configdsl.isGuildMessage
-import io.github.romangraef.discordkt.api.configdsl.isPinned
 import io.github.romangraef.discordkt.api.user.User
 import io.github.romangraef.discordkt.event.Event
 
