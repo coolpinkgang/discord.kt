@@ -3,6 +3,7 @@ package io.github.romangraef.discordkt.api.user
 import io.github.romangraef.discordkt.api.CachedApiModel
 import io.github.romangraef.discordkt.api.DiscordKt
 import io.github.romangraef.discordkt.cache.Cache
+import io.github.romangraef.discordkt.cache.CacheController
 import io.github.romangraef.discordkt.snowflake.Snowflake
 import io.github.romangraef.discordkt.models.user.User as ModelUser
 
@@ -15,4 +16,8 @@ class User(
     val bot: Boolean get() = backing.bot == true
     val discriminator: String by backing::discriminator
     val discriminatorInt: Int get() = discriminator.toInt()
+    companion object {
+        //fun cache(cacheController: CacheController): Cache<ModelUser, User> = cacheController.lookup()
+        fun of(cacheController: CacheController, user: ModelUser): User = TODO()
+    }
 }

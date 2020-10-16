@@ -1,16 +1,7 @@
 package io.github.romangraef.discordkt.http.routes
 
 import io.github.romangraef.discordkt.models.DiscordFile
-import io.github.romangraef.discordkt.models.channel.AllowedMentions
-import io.github.romangraef.discordkt.models.channel.Channel
-import io.github.romangraef.discordkt.models.channel.Embed
-import io.github.romangraef.discordkt.models.channel.FollowNewsChannel
-import io.github.romangraef.discordkt.models.channel.FollowedChannel
-import io.github.romangraef.discordkt.models.channel.GroupDMAddRecipient
-import io.github.romangraef.discordkt.models.channel.Message
-import io.github.romangraef.discordkt.models.channel.MessageEdit
-import io.github.romangraef.discordkt.models.channel.MessagesBulkDelete
-import io.github.romangraef.discordkt.models.channel.OverwriteEdit
+import io.github.romangraef.discordkt.models.channel.*
 import io.github.romangraef.discordkt.models.invite.Invite
 import io.github.romangraef.discordkt.models.invite.InviteCreate
 import io.github.romangraef.discordkt.models.invite.InviteWithMetadata
@@ -33,7 +24,7 @@ import kotlinx.serialization.serializer
 
 object ChannelRoutes {
     fun GET_CHANNEL(channelId: Snowflake) = GET<Channel>("/channels/$channelId")
-    fun MODIFY_CHANNEL(channelId: Snowflake) = PATCH<Channel, Channel>("/channels/$channelId")
+    fun MODIFY_CHANNEL(channelId: Snowflake) = PATCH<Channel, ChannelUpdate>("/channels/$channelId")
     fun DELETE_CHANNEL(channelId: Snowflake) = DELETE<Channel>("/channels/$channelId")
     fun GET_CHANNEL_MESSAGES(
         channelId: Snowflake,

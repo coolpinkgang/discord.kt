@@ -33,4 +33,5 @@ class Cache<T : BaseSnowflake, V : ApiModel>(
     operator fun get(key: BaseSnowflake): V? = cachedObjects[key]?.let { transformer(it.asSnowflake, discordKt) as V }
 
     fun delegate(id: BaseSnowflake) = CacheDelegate(this, id.asSnowflake)
+    fun remove(vararg snowflake: Snowflake) = snowflake.forEach { cachedObjects.remove(it) }
 }
