@@ -16,4 +16,8 @@ class User(
     val bot: Boolean get() = backing.bot == true
     val discriminator: String by backing::discriminator
     val discriminatorInt: Int get() = discriminator.toInt()
+    companion object {
+        fun lookupCacheIn(cacheController: CacheController) =
+            cacheController.lookup<ModelUser, User>()
+    }
 }
