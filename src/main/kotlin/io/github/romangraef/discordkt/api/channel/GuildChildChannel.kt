@@ -6,7 +6,10 @@ import io.github.romangraef.discordkt.snowflake.Snowflake
 
 interface GuildChildChannel : GuildChannel {
     override val selfCache: Cache<Channel, out GuildChildChannel>
-    val parentId: Snowflake? get() = backing.parentId
-    suspend fun getParent(): GuildCategoryChannel? =
-        parentId?.let { (caches.lookup<Channel, BaseChannel>()[it] ?: TODO("load")) as GuildCategoryChannel }
+    val parent: GuildCategoryChannel? get() =
+        backing.parentId?.let { id ->
+            caches.lookup<Channel, BaseChannel>()[id]?.let { it as GuildCategoryChannel }
+                ?: throw RuntimeException("Parent wasn't loaded")
+        }
+    suspend fun loadParent(): GuildCategoryChannel? = TODO()
 }

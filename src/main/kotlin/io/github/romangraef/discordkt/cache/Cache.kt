@@ -1,13 +1,13 @@
 package io.github.romangraef.discordkt.cache
 
-import io.github.romangraef.discordkt.api.ApiModel
+import io.github.romangraef.discordkt.api.CacheableApiModel
 import io.github.romangraef.discordkt.api.DiscordKt
+import io.github.romangraef.discordkt.http.routes.Route
 import io.github.romangraef.discordkt.snowflake.BaseSnowflake
 import io.github.romangraef.discordkt.snowflake.Snowflake
-import java.util.LinkedHashMap
 import kotlin.reflect.KClass
 
-class Cache<T : BaseSnowflake, V : ApiModel>(
+class Cache<T : BaseSnowflake, V : CacheableApiModel<T>>(
     val cachePolicy: CachePolicy<V>,
     val modelClass: KClass<out V>,
     val snowflakeClass: KClass<out T>,
@@ -34,4 +34,10 @@ class Cache<T : BaseSnowflake, V : ApiModel>(
 
     fun delegate(id: BaseSnowflake) = CacheDelegate(this, id.asSnowflake)
     fun remove(vararg snowflake: Snowflake) = snowflake.forEach { cachedObjects.remove(it) }
+
+    suspend fun <BODY> executeRoute(route: Route<T, BODY>, body: BODY): V {
+        val model = discordKt.routeExecutor.execute(route, body)
+        this.update(model)
+        return this[model]!!
+    }
 }

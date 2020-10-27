@@ -13,14 +13,15 @@ class CacheController(
     _caches: List<Cache<*, *>>
 ) {
     private val caches = mutableMapOf<KClass<*>, Cache<*, *>>()
-    fun <T : ApiModel> lookup(modelClass: KClass<T>): Cache<*, T> = caches[modelClass] as Cache<*, T>
+    fun <T : CacheableApiModel<*>> lookup(modelClass: KClass<T>): Cache<*, T> = caches[modelClass] as Cache<*, T>
 
     init {
         _caches.forEach { caches[it.modelClass] = it }
     }
 
-    inline fun <reified T : ApiModel> lookupNoCast(): Cache<*, T> = lookup(T::class)
-    inline fun <reified T : BaseSnowflake, reified V : ApiModel> lookup() = lookupNoCast<V>() as Cache<T, V>
+    inline fun <reified T : CacheableApiModel<*>> lookupNoCast(): Cache<*, T> = lookup(T::class)
+    inline fun <reified T : BaseSnowflake, reified V : CacheableApiModel<T>> lookup() = lookupNoCast<V>() as Cache<T, V>
+    @Deprecated("Deprecated", ReplaceWith("Cache::executeRoute"))
     suspend inline fun <reified RESPONSE : SnowflakeMixin, BODY, reified RESULT : CacheableApiModel<RESPONSE>>
         executeRoute(route: Route<RESPONSE, BODY>, body: BODY): RESULT {
         val model = discordKt.routeExecutor.execute(route, body)

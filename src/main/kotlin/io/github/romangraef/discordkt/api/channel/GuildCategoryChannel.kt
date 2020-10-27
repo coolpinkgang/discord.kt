@@ -10,4 +10,8 @@ class GuildCategoryChannel(
     override val id: Snowflake
 ) : GuildChannel {
     override val selfCache: Cache<Channel, GuildCategoryChannel> = caches.lookup()
+    val children: List<GuildChildChannel> get() = TODO()
+    fun loadChildren() {
+
+    }
 }

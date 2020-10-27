@@ -28,6 +28,7 @@ class DiscordKt (
     val logger: Logger,
     caches: List<PartialCache<out ApiModel>>,
 ) {
+    val bot: Bot = Bot(this)
     val cacheController = CacheController(this, caches.map { it.complete(this) })
     private val httpClient: HttpClient = HttpClient(OkHttp) {
         addDefaultResponseValidation() // TODO custom response validation

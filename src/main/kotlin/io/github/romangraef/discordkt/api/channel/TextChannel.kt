@@ -9,10 +9,10 @@ import io.github.romangraef.discordkt.snowflake.Snowflake
 
 interface TextChannel : BaseChannel {
     override val selfCache: Cache<Channel, out TextChannel>
-    val lastMessageId: Snowflake? get() = backing.lastMessageId
-    suspend fun getLastMessage(): Message? {
-        return lastMessageId?.let { Message.lookupCacheIn(caches)[it] ?: TODO("load") }
+    val lastMessage: Message? get() = backing.lastMessageId?.let {
+        Message.lookupCacheIn(caches)[it] ?: throw RuntimeException()
     }
+    suspend fun loadLastMessage(): Unit = TODO()
     suspend fun getPinedMessages(): List<Message> = TODO()
     suspend fun sendMessage(): Unit = TODO()
     suspend fun getMessage(id: Snowflake): Message = TODO()
